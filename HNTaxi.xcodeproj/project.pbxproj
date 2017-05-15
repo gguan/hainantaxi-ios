@@ -7,21 +7,138 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6AF8D93D1EC9670A00F9D951 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D93C1EC9670A00F9D951 /* AppDelegate.swift */; };
-		6AF8D93F1EC9670A00F9D951 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D93E1EC9670A00F9D951 /* ViewController.swift */; };
-		6AF8D9421EC9670A00F9D951 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AF8D9401EC9670A00F9D951 /* Main.storyboard */; };
-		6AF8D9441EC9670A00F9D951 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AF8D9431EC9670A00F9D951 /* Assets.xcassets */; };
-		6AF8D9471EC9670A00F9D951 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AF8D9451EC9670A00F9D951 /* LaunchScreen.storyboard */; };
+		58FDDC5492508E8376002A3E /* Pods_HNTaxiKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EB91FBCA1DA6A4C9AF8878A /* Pods_HNTaxiKit.framework */; };
+		6AF8D9571EC967CF00F9D951 /* HNTaxiKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 6AF8D9551EC967CF00F9D951 /* HNTaxiKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6AF8D95A1EC967CF00F9D951 /* HNTaxiKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AF8D9531EC967CF00F9D951 /* HNTaxiKit.framework */; };
+		6AF8D95B1EC967CF00F9D951 /* HNTaxiKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6AF8D9531EC967CF00F9D951 /* HNTaxiKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6AF8D9691EC967E700F9D951 /* NetworkService.h in Headers */ = {isa = PBXBuildFile; fileRef = 6AF8D9671EC967E700F9D951 /* NetworkService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6AF8D96C1EC967E700F9D951 /* NetworkService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AF8D9651EC967E700F9D951 /* NetworkService.framework */; };
+		6AF8D96D1EC967E700F9D951 /* NetworkService.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6AF8D9651EC967E700F9D951 /* NetworkService.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6AF8D97A1EC967F600F9D951 /* CacheService.h in Headers */ = {isa = PBXBuildFile; fileRef = 6AF8D9781EC967F600F9D951 /* CacheService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6AF8D97D1EC967F600F9D951 /* CacheService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AF8D9761EC967F600F9D951 /* CacheService.framework */; };
+		6AF8D97E1EC967F600F9D951 /* CacheService.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6AF8D9761EC967F600F9D951 /* CacheService.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6AF8D9831EC968C200F9D951 /* CacheClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9821EC968C200F9D951 /* CacheClient.swift */; };
+		6AF8D9881EC968CD00F9D951 /* HTTPStatusCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9841EC968CD00F9D951 /* HTTPStatusCode.swift */; };
+		6AF8D9891EC968CD00F9D951 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9851EC968CD00F9D951 /* NetworkClient.swift */; };
+		6AF8D98A1EC968CD00F9D951 /* RequestEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9861EC968CD00F9D951 /* RequestEntity.swift */; };
+		6AF8D98B1EC968CD00F9D951 /* RxAlamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9871EC968CD00F9D951 /* RxAlamofire.swift */; };
+		6AF8D9971EC96A6100F9D951 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D98D1EC96A6100F9D951 /* AppDelegate.swift */; };
+		6AF8D9981EC96A6100F9D951 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9901EC96A6100F9D951 /* ViewController.swift */; };
+		6AF8D99D1EC96A7B00F9D951 /* HNTNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D99C1EC96A7B00F9D951 /* HNTNetworking.swift */; };
+		6AF8D99F1EC96C3E00F9D951 /* HNTAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D99E1EC96C3E00F9D951 /* HNTAuthManager.swift */; };
+		6AF8D9A11EC96C8200F9D951 /* HNTRequestEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9A01EC96C8200F9D951 /* HNTRequestEntity.swift */; };
+		6AF8D9A31EC96C9B00F9D951 /* HNTResponeEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9A21EC96C9B00F9D951 /* HNTResponeEntity.swift */; };
+		6AF8D9A81EC980D200F9D951 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9A71EC980D200F9D951 /* MapViewController.swift */; };
+		6AF8D9B01EC9851500F9D951 /* MapSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9AF1EC9851500F9D951 /* MapSearchManager.swift */; };
+		6AF8D9B31EC9886400F9D951 /* JsonMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9B21EC9886400F9D951 /* JsonMapper.swift */; };
+		6AF8D9BE1EC98B8900F9D951 /* ContainerViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9B51EC98B8900F9D951 /* ContainerViewModelProtocol.swift */; };
+		6AF8D9BF1EC98B8900F9D951 /* Foudation+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9B61EC98B8900F9D951 /* Foudation+Extension.swift */; };
+		6AF8D9C01EC98B8900F9D951 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9B71EC98B8900F9D951 /* Layout.swift */; };
+		6AF8D9C11EC98B8900F9D951 /* OptionalVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9B81EC98B8900F9D951 /* OptionalVariable.swift */; };
+		6AF8D9C21EC98B8900F9D951 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9B91EC98B8900F9D951 /* R.generated.swift */; };
+		6AF8D9C31EC98B8900F9D951 /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9BA1EC98B8900F9D951 /* Reusable.swift */; };
+		6AF8D9C41EC98B8900F9D951 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9BB1EC98B8900F9D951 /* Signal.swift */; };
+		6AF8D9C51EC98B8900F9D951 /* UIKit+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9BC1EC98B8900F9D951 /* UIKit+Extension.swift */; };
+		6AF8D9C61EC98B8900F9D951 /* ValidationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF8D9BD1EC98B8900F9D951 /* ValidationService.swift */; };
+		6AF8D9CB1EC9A02800F9D951 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6AF8D9921EC96A6100F9D951 /* Assets.xcassets */; };
+		6AF8D9CC1EC9A02800F9D951 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AF8D9931EC96A6100F9D951 /* LaunchScreen.storyboard */; };
+		6AF8D9CD1EC9A02800F9D951 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6AF8D9951EC96A6100F9D951 /* Main.storyboard */; };
+		872624D9C4E3D9C40EC9086E /* Pods_CacheService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ABCDDEA3D0DC0E56423F310 /* Pods_CacheService.framework */; };
+		A0393A1D4F07C1B2F6EAA0AE /* Pods_HNTaxi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26AD66C6586132D589313DC2 /* Pods_HNTaxi.framework */; };
+		DB9A3597B0BAC358A730DA22 /* Pods_NetworkService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A663DE764B90DC60B3EBC01D /* Pods_NetworkService.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		6AF8D9581EC967CF00F9D951 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6AF8D9311EC9670900F9D951 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6AF8D9521EC967CF00F9D951;
+			remoteInfo = HNTaxiKit;
+		};
+		6AF8D96A1EC967E700F9D951 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6AF8D9311EC9670900F9D951 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6AF8D9641EC967E700F9D951;
+			remoteInfo = NetworkService;
+		};
+		6AF8D97B1EC967F600F9D951 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6AF8D9311EC9670900F9D951 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6AF8D9751EC967F600F9D951;
+			remoteInfo = CacheService;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6AF8D95F1EC967CF00F9D951 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6AF8D95B1EC967CF00F9D951 /* HNTaxiKit.framework in Embed Frameworks */,
+				6AF8D97E1EC967F600F9D951 /* CacheService.framework in Embed Frameworks */,
+				6AF8D96D1EC967E700F9D951 /* NetworkService.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		0EB91FBCA1DA6A4C9AF8878A /* Pods_HNTaxiKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HNTaxiKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		21982FACE9295100C1CAAFB7 /* Pods-HNTaxiKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HNTaxiKit.release.xcconfig"; path = "Pods/Target Support Files/Pods-HNTaxiKit/Pods-HNTaxiKit.release.xcconfig"; sourceTree = "<group>"; };
+		26AD66C6586132D589313DC2 /* Pods_HNTaxi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HNTaxi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		44BC457A43A7A345DB5BBC4F /* Pods-HNTaxi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HNTaxi.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HNTaxi/Pods-HNTaxi.debug.xcconfig"; sourceTree = "<group>"; };
+		62B08F3E1B39846C83AD19B9 /* Pods-NetworkService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NetworkService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NetworkService/Pods-NetworkService.debug.xcconfig"; sourceTree = "<group>"; };
+		6A3494538BC4229360698B4D /* Pods-CacheService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CacheService.release.xcconfig"; path = "Pods/Target Support Files/Pods-CacheService/Pods-CacheService.release.xcconfig"; sourceTree = "<group>"; };
 		6AF8D9391EC9670A00F9D951 /* HNTaxi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HNTaxi.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6AF8D93C1EC9670A00F9D951 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		6AF8D93E1EC9670A00F9D951 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		6AF8D9411EC9670A00F9D951 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		6AF8D9431EC9670A00F9D951 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		6AF8D9461EC9670A00F9D951 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6AF8D9481EC9670A00F9D951 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AF8D9531EC967CF00F9D951 /* HNTaxiKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HNTaxiKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AF8D9551EC967CF00F9D951 /* HNTaxiKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HNTaxiKit.h; sourceTree = "<group>"; };
+		6AF8D9561EC967CF00F9D951 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AF8D9651EC967E700F9D951 /* NetworkService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NetworkService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AF8D9671EC967E700F9D951 /* NetworkService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkService.h; sourceTree = "<group>"; };
+		6AF8D9681EC967E700F9D951 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AF8D9761EC967F600F9D951 /* CacheService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CacheService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AF8D9781EC967F600F9D951 /* CacheService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CacheService.h; sourceTree = "<group>"; };
+		6AF8D9791EC967F600F9D951 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AF8D9821EC968C200F9D951 /* CacheClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheClient.swift; sourceTree = "<group>"; };
+		6AF8D9841EC968CD00F9D951 /* HTTPStatusCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPStatusCode.swift; sourceTree = "<group>"; };
+		6AF8D9851EC968CD00F9D951 /* NetworkClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
+		6AF8D9861EC968CD00F9D951 /* RequestEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestEntity.swift; sourceTree = "<group>"; };
+		6AF8D9871EC968CD00F9D951 /* RxAlamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxAlamofire.swift; sourceTree = "<group>"; };
+		6AF8D98D1EC96A6100F9D951 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		6AF8D9901EC96A6100F9D951 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		6AF8D9921EC96A6100F9D951 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6AF8D9941EC96A6100F9D951 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		6AF8D9961EC96A6100F9D951 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		6AF8D99C1EC96A7B00F9D951 /* HNTNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HNTNetworking.swift; sourceTree = "<group>"; };
+		6AF8D99E1EC96C3E00F9D951 /* HNTAuthManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HNTAuthManager.swift; sourceTree = "<group>"; };
+		6AF8D9A01EC96C8200F9D951 /* HNTRequestEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HNTRequestEntity.swift; sourceTree = "<group>"; };
+		6AF8D9A21EC96C9B00F9D951 /* HNTResponeEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HNTResponeEntity.swift; sourceTree = "<group>"; };
+		6AF8D9A71EC980D200F9D951 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		6AF8D9AF1EC9851500F9D951 /* MapSearchManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSearchManager.swift; sourceTree = "<group>"; };
+		6AF8D9B11EC9862600F9D951 /* HNTaxi_Bridge_Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HNTaxi_Bridge_Header.h; sourceTree = "<group>"; };
+		6AF8D9B21EC9886400F9D951 /* JsonMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonMapper.swift; sourceTree = "<group>"; };
+		6AF8D9B51EC98B8900F9D951 /* ContainerViewModelProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewModelProtocol.swift; sourceTree = "<group>"; };
+		6AF8D9B61EC98B8900F9D951 /* Foudation+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Foudation+Extension.swift"; sourceTree = "<group>"; };
+		6AF8D9B71EC98B8900F9D951 /* Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
+		6AF8D9B81EC98B8900F9D951 /* OptionalVariable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionalVariable.swift; sourceTree = "<group>"; };
+		6AF8D9B91EC98B8900F9D951 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
+		6AF8D9BA1EC98B8900F9D951 /* Reusable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
+		6AF8D9BB1EC98B8900F9D951 /* Signal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
+		6AF8D9BC1EC98B8900F9D951 /* UIKit+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIKit+Extension.swift"; sourceTree = "<group>"; };
+		6AF8D9BD1EC98B8900F9D951 /* ValidationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValidationService.swift; sourceTree = "<group>"; };
+		7ABCDDEA3D0DC0E56423F310 /* Pods_CacheService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CacheService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A663DE764B90DC60B3EBC01D /* Pods_NetworkService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NetworkService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8106EEE9E592B92EFCA758B /* Pods-HNTaxi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HNTaxi.release.xcconfig"; path = "Pods/Target Support Files/Pods-HNTaxi/Pods-HNTaxi.release.xcconfig"; sourceTree = "<group>"; };
+		C9422DB054DD93664F334D98 /* Pods-CacheService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CacheService.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CacheService/Pods-CacheService.debug.xcconfig"; sourceTree = "<group>"; };
+		D9866EB90FE1A49CBF1CA94F /* Pods-HNTaxiKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HNTaxiKit.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HNTaxiKit/Pods-HNTaxiKit.debug.xcconfig"; sourceTree = "<group>"; };
+		E068708043350071F51292A5 /* Pods-NetworkService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NetworkService.release.xcconfig"; path = "Pods/Target Support Files/Pods-NetworkService/Pods-NetworkService.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +146,61 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AF8D95A1EC967CF00F9D951 /* HNTaxiKit.framework in Frameworks */,
+				6AF8D97D1EC967F600F9D951 /* CacheService.framework in Frameworks */,
+				6AF8D96C1EC967E700F9D951 /* NetworkService.framework in Frameworks */,
+				A0393A1D4F07C1B2F6EAA0AE /* Pods_HNTaxi.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AF8D94F1EC967CF00F9D951 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				58FDDC5492508E8376002A3E /* Pods_HNTaxiKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AF8D9611EC967E700F9D951 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB9A3597B0BAC358A730DA22 /* Pods_NetworkService.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AF8D9721EC967F600F9D951 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				872624D9C4E3D9C40EC9086E /* Pods_CacheService.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4702A116094E23767AB55634 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7ABCDDEA3D0DC0E56423F310 /* Pods_CacheService.framework */,
+				26AD66C6586132D589313DC2 /* Pods_HNTaxi.framework */,
+				0EB91FBCA1DA6A4C9AF8878A /* Pods_HNTaxiKit.framework */,
+				A663DE764B90DC60B3EBC01D /* Pods_NetworkService.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6AF8D9301EC9670900F9D951 = {
 			isa = PBXGroup;
 			children = (
 				6AF8D93B1EC9670A00F9D951 /* HNTaxi */,
+				6AF8D9541EC967CF00F9D951 /* HNTaxiKit */,
+				6AF8D9661EC967E700F9D951 /* NetworkService */,
+				6AF8D9771EC967F600F9D951 /* CacheService */,
 				6AF8D93A1EC9670A00F9D951 /* Products */,
+				E3D356F543CBE37E60902488 /* Pods */,
+				4702A116094E23767AB55634 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -47,6 +208,9 @@
 			isa = PBXGroup;
 			children = (
 				6AF8D9391EC9670A00F9D951 /* HNTaxi.app */,
+				6AF8D9531EC967CF00F9D951 /* HNTaxiKit.framework */,
+				6AF8D9651EC967E700F9D951 /* NetworkService.framework */,
+				6AF8D9761EC967F600F9D951 /* CacheService.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -54,35 +218,274 @@
 		6AF8D93B1EC9670A00F9D951 /* HNTaxi */ = {
 			isa = PBXGroup;
 			children = (
-				6AF8D93C1EC9670A00F9D951 /* AppDelegate.swift */,
-				6AF8D93E1EC9670A00F9D951 /* ViewController.swift */,
-				6AF8D9401EC9670A00F9D951 /* Main.storyboard */,
-				6AF8D9431EC9670A00F9D951 /* Assets.xcassets */,
-				6AF8D9451EC9670A00F9D951 /* LaunchScreen.storyboard */,
+				6AF8D98C1EC96A6100F9D951 /* AppDelegate */,
+				6AF8D9B41EC98B8900F9D951 /* General */,
+				6AF8D9AD1EC984C800F9D951 /* Service */,
+				6AF8D98E1EC96A6100F9D951 /* Modules */,
+				6AF8D9911EC96A6100F9D951 /* Resource */,
 				6AF8D9481EC9670A00F9D951 /* Info.plist */,
+				6AF8D9B11EC9862600F9D951 /* HNTaxi_Bridge_Header.h */,
 			);
 			path = HNTaxi;
 			sourceTree = "<group>";
 		};
+		6AF8D9541EC967CF00F9D951 /* HNTaxiKit */ = {
+			isa = PBXGroup;
+			children = (
+				6AF8D9551EC967CF00F9D951 /* HNTaxiKit.h */,
+				6AF8D9561EC967CF00F9D951 /* Info.plist */,
+				6AF8D99C1EC96A7B00F9D951 /* HNTNetworking.swift */,
+				6AF8D99E1EC96C3E00F9D951 /* HNTAuthManager.swift */,
+				6AF8D9A01EC96C8200F9D951 /* HNTRequestEntity.swift */,
+				6AF8D9A21EC96C9B00F9D951 /* HNTResponeEntity.swift */,
+				6AF8D9B21EC9886400F9D951 /* JsonMapper.swift */,
+			);
+			path = HNTaxiKit;
+			sourceTree = "<group>";
+		};
+		6AF8D9661EC967E700F9D951 /* NetworkService */ = {
+			isa = PBXGroup;
+			children = (
+				6AF8D9841EC968CD00F9D951 /* HTTPStatusCode.swift */,
+				6AF8D9851EC968CD00F9D951 /* NetworkClient.swift */,
+				6AF8D9861EC968CD00F9D951 /* RequestEntity.swift */,
+				6AF8D9871EC968CD00F9D951 /* RxAlamofire.swift */,
+				6AF8D9671EC967E700F9D951 /* NetworkService.h */,
+				6AF8D9681EC967E700F9D951 /* Info.plist */,
+			);
+			path = NetworkService;
+			sourceTree = "<group>";
+		};
+		6AF8D9771EC967F600F9D951 /* CacheService */ = {
+			isa = PBXGroup;
+			children = (
+				6AF8D9821EC968C200F9D951 /* CacheClient.swift */,
+				6AF8D9781EC967F600F9D951 /* CacheService.h */,
+				6AF8D9791EC967F600F9D951 /* Info.plist */,
+			);
+			path = CacheService;
+			sourceTree = "<group>";
+		};
+		6AF8D98C1EC96A6100F9D951 /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				6AF8D98D1EC96A6100F9D951 /* AppDelegate.swift */,
+			);
+			path = AppDelegate;
+			sourceTree = "<group>";
+		};
+		6AF8D98E1EC96A6100F9D951 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				6AF8D9A41EC9809300F9D951 /* Map */,
+				6AF8D98F1EC96A6100F9D951 /* Base */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		6AF8D98F1EC96A6100F9D951 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				6AF8D9901EC96A6100F9D951 /* ViewController.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		6AF8D9911EC96A6100F9D951 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				6AF8D9921EC96A6100F9D951 /* Assets.xcassets */,
+				6AF8D9931EC96A6100F9D951 /* LaunchScreen.storyboard */,
+				6AF8D9951EC96A6100F9D951 /* Main.storyboard */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		6AF8D9A41EC9809300F9D951 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				6AF8D9A51EC980A300F9D951 /* Classes */,
+				6AF8D9A61EC980A300F9D951 /* Views */,
+				6AF8D9A71EC980D200F9D951 /* MapViewController.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		6AF8D9A51EC980A300F9D951 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		6AF8D9A61EC980A300F9D951 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6AF8D9AD1EC984C800F9D951 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				6AF8D9AE1EC984C800F9D951 /* Map */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		6AF8D9AE1EC984C800F9D951 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				6AF8D9AF1EC9851500F9D951 /* MapSearchManager.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		6AF8D9B41EC98B8900F9D951 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				6AF8D9B51EC98B8900F9D951 /* ContainerViewModelProtocol.swift */,
+				6AF8D9B61EC98B8900F9D951 /* Foudation+Extension.swift */,
+				6AF8D9B71EC98B8900F9D951 /* Layout.swift */,
+				6AF8D9B81EC98B8900F9D951 /* OptionalVariable.swift */,
+				6AF8D9B91EC98B8900F9D951 /* R.generated.swift */,
+				6AF8D9BA1EC98B8900F9D951 /* Reusable.swift */,
+				6AF8D9BB1EC98B8900F9D951 /* Signal.swift */,
+				6AF8D9BC1EC98B8900F9D951 /* UIKit+Extension.swift */,
+				6AF8D9BD1EC98B8900F9D951 /* ValidationService.swift */,
+			);
+			path = General;
+			sourceTree = "<group>";
+		};
+		E3D356F543CBE37E60902488 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C9422DB054DD93664F334D98 /* Pods-CacheService.debug.xcconfig */,
+				6A3494538BC4229360698B4D /* Pods-CacheService.release.xcconfig */,
+				44BC457A43A7A345DB5BBC4F /* Pods-HNTaxi.debug.xcconfig */,
+				B8106EEE9E592B92EFCA758B /* Pods-HNTaxi.release.xcconfig */,
+				D9866EB90FE1A49CBF1CA94F /* Pods-HNTaxiKit.debug.xcconfig */,
+				21982FACE9295100C1CAAFB7 /* Pods-HNTaxiKit.release.xcconfig */,
+				62B08F3E1B39846C83AD19B9 /* Pods-NetworkService.debug.xcconfig */,
+				E068708043350071F51292A5 /* Pods-NetworkService.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		6AF8D9501EC967CF00F9D951 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AF8D9571EC967CF00F9D951 /* HNTaxiKit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AF8D9621EC967E700F9D951 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AF8D9691EC967E700F9D951 /* NetworkService.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AF8D9731EC967F600F9D951 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AF8D97A1EC967F600F9D951 /* CacheService.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		6AF8D9381EC9670A00F9D951 /* HNTaxi */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6AF8D94B1EC9670A00F9D951 /* Build configuration list for PBXNativeTarget "HNTaxi" */;
 			buildPhases = (
+				FEF395F1B62EA9C21BB4D5BE /* [CP] Check Pods Manifest.lock */,
 				6AF8D9351EC9670A00F9D951 /* Sources */,
 				6AF8D9361EC9670A00F9D951 /* Frameworks */,
 				6AF8D9371EC9670A00F9D951 /* Resources */,
+				6AF8D95F1EC967CF00F9D951 /* Embed Frameworks */,
+				95437CD6241022850D6452C0 /* [CP] Embed Pods Frameworks */,
+				2AAB53554C85E41CCA810E75 /* [CP] Copy Pods Resources */,
+				6AF8D9CE1EC9A06A00F9D951 /* R.Swift */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				6AF8D9591EC967CF00F9D951 /* PBXTargetDependency */,
+				6AF8D96B1EC967E700F9D951 /* PBXTargetDependency */,
+				6AF8D97C1EC967F600F9D951 /* PBXTargetDependency */,
 			);
 			name = HNTaxi;
 			productName = HNTaxi;
 			productReference = 6AF8D9391EC9670A00F9D951 /* HNTaxi.app */;
 			productType = "com.apple.product-type.application";
+		};
+		6AF8D9521EC967CF00F9D951 /* HNTaxiKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6AF8D95E1EC967CF00F9D951 /* Build configuration list for PBXNativeTarget "HNTaxiKit" */;
+			buildPhases = (
+				401A17C33EC2FB87241BF1DC /* [CP] Check Pods Manifest.lock */,
+				6AF8D94E1EC967CF00F9D951 /* Sources */,
+				6AF8D94F1EC967CF00F9D951 /* Frameworks */,
+				6AF8D9501EC967CF00F9D951 /* Headers */,
+				6AF8D9511EC967CF00F9D951 /* Resources */,
+				AC4B1A6E56A19970B61F0C76 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HNTaxiKit;
+			productName = HNTaxiKit;
+			productReference = 6AF8D9531EC967CF00F9D951 /* HNTaxiKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		6AF8D9641EC967E700F9D951 /* NetworkService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6AF8D96E1EC967E700F9D951 /* Build configuration list for PBXNativeTarget "NetworkService" */;
+			buildPhases = (
+				5A77FCE1328F295591C65670 /* [CP] Check Pods Manifest.lock */,
+				6AF8D9601EC967E700F9D951 /* Sources */,
+				6AF8D9611EC967E700F9D951 /* Frameworks */,
+				6AF8D9621EC967E700F9D951 /* Headers */,
+				6AF8D9631EC967E700F9D951 /* Resources */,
+				0822F224B8AE1DBEC5047099 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NetworkService;
+			productName = NetworkService;
+			productReference = 6AF8D9651EC967E700F9D951 /* NetworkService.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		6AF8D9751EC967F600F9D951 /* CacheService */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6AF8D97F1EC967F600F9D951 /* Build configuration list for PBXNativeTarget "CacheService" */;
+			buildPhases = (
+				ECDB885020EC99F459558039 /* [CP] Check Pods Manifest.lock */,
+				6AF8D9711EC967F600F9D951 /* Sources */,
+				6AF8D9721EC967F600F9D951 /* Frameworks */,
+				6AF8D9731EC967F600F9D951 /* Headers */,
+				6AF8D9741EC967F600F9D951 /* Resources */,
+				C3183D9D6A98FF615510F69B /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CacheService;
+			productName = CacheService;
+			productReference = 6AF8D9761EC967F600F9D951 /* CacheService.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -97,6 +500,24 @@
 					6AF8D9381EC9670A00F9D951 = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = 858CBVXSWP;
+						ProvisioningStyle = Automatic;
+					};
+					6AF8D9521EC967CF00F9D951 = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = 858CBVXSWP;
+						LastSwiftMigration = 0830;
+						ProvisioningStyle = Automatic;
+					};
+					6AF8D9641EC967E700F9D951 = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = 858CBVXSWP;
+						LastSwiftMigration = 0830;
+						ProvisioningStyle = Automatic;
+					};
+					6AF8D9751EC967F600F9D951 = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = 858CBVXSWP;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -115,6 +536,9 @@
 			projectRoot = "";
 			targets = (
 				6AF8D9381EC9670A00F9D951 /* HNTaxi */,
+				6AF8D9521EC967CF00F9D951 /* HNTaxiKit */,
+				6AF8D9641EC967E700F9D951 /* NetworkService */,
+				6AF8D9751EC967F600F9D951 /* CacheService */,
 			);
 		};
 /* End PBXProject section */
@@ -124,41 +548,274 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6AF8D9471EC9670A00F9D951 /* LaunchScreen.storyboard in Resources */,
-				6AF8D9441EC9670A00F9D951 /* Assets.xcassets in Resources */,
-				6AF8D9421EC9670A00F9D951 /* Main.storyboard in Resources */,
+				6AF8D9CB1EC9A02800F9D951 /* Assets.xcassets in Resources */,
+				6AF8D9CC1EC9A02800F9D951 /* LaunchScreen.storyboard in Resources */,
+				6AF8D9CD1EC9A02800F9D951 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AF8D9511EC967CF00F9D951 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AF8D9631EC967E700F9D951 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AF8D9741EC967F600F9D951 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0822F224B8AE1DBEC5047099 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NetworkService/Pods-NetworkService-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2AAB53554C85E41CCA810E75 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HNTaxi/Pods-HNTaxi-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		401A17C33EC2FB87241BF1DC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		5A77FCE1328F295591C65670 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		6AF8D9CE1EC9A06A00F9D951 /* R.Swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = R.Swift;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$PODS_ROOT/R.swift/rswift\" \"$SRCROOT/HNTaxi/General\"";
+		};
+		95437CD6241022850D6452C0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HNTaxi/Pods-HNTaxi-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AC4B1A6E56A19970B61F0C76 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HNTaxiKit/Pods-HNTaxiKit-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C3183D9D6A98FF615510F69B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CacheService/Pods-CacheService-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ECDB885020EC99F459558039 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		FEF395F1B62EA9C21BB4D5BE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6AF8D9351EC9670A00F9D951 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6AF8D93F1EC9670A00F9D951 /* ViewController.swift in Sources */,
-				6AF8D93D1EC9670A00F9D951 /* AppDelegate.swift in Sources */,
+				6AF8D9B01EC9851500F9D951 /* MapSearchManager.swift in Sources */,
+				6AF8D9BF1EC98B8900F9D951 /* Foudation+Extension.swift in Sources */,
+				6AF8D9C21EC98B8900F9D951 /* R.generated.swift in Sources */,
+				6AF8D9981EC96A6100F9D951 /* ViewController.swift in Sources */,
+				6AF8D9C31EC98B8900F9D951 /* Reusable.swift in Sources */,
+				6AF8D9A81EC980D200F9D951 /* MapViewController.swift in Sources */,
+				6AF8D9C01EC98B8900F9D951 /* Layout.swift in Sources */,
+				6AF8D9C11EC98B8900F9D951 /* OptionalVariable.swift in Sources */,
+				6AF8D9971EC96A6100F9D951 /* AppDelegate.swift in Sources */,
+				6AF8D9C61EC98B8900F9D951 /* ValidationService.swift in Sources */,
+				6AF8D9BE1EC98B8900F9D951 /* ContainerViewModelProtocol.swift in Sources */,
+				6AF8D9C51EC98B8900F9D951 /* UIKit+Extension.swift in Sources */,
+				6AF8D9C41EC98B8900F9D951 /* Signal.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AF8D94E1EC967CF00F9D951 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AF8D9A31EC96C9B00F9D951 /* HNTResponeEntity.swift in Sources */,
+				6AF8D9B31EC9886400F9D951 /* JsonMapper.swift in Sources */,
+				6AF8D9A11EC96C8200F9D951 /* HNTRequestEntity.swift in Sources */,
+				6AF8D99F1EC96C3E00F9D951 /* HNTAuthManager.swift in Sources */,
+				6AF8D99D1EC96A7B00F9D951 /* HNTNetworking.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AF8D9601EC967E700F9D951 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AF8D9881EC968CD00F9D951 /* HTTPStatusCode.swift in Sources */,
+				6AF8D98A1EC968CD00F9D951 /* RequestEntity.swift in Sources */,
+				6AF8D98B1EC968CD00F9D951 /* RxAlamofire.swift in Sources */,
+				6AF8D9891EC968CD00F9D951 /* NetworkClient.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6AF8D9711EC967F600F9D951 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AF8D9831EC968C200F9D951 /* CacheClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		6AF8D9401EC9670A00F9D951 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6AF8D9411EC9670A00F9D951 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
+/* Begin PBXTargetDependency section */
+		6AF8D9591EC967CF00F9D951 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6AF8D9521EC967CF00F9D951 /* HNTaxiKit */;
+			targetProxy = 6AF8D9581EC967CF00F9D951 /* PBXContainerItemProxy */;
 		};
-		6AF8D9451EC9670A00F9D951 /* LaunchScreen.storyboard */ = {
+		6AF8D96B1EC967E700F9D951 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6AF8D9641EC967E700F9D951 /* NetworkService */;
+			targetProxy = 6AF8D96A1EC967E700F9D951 /* PBXContainerItemProxy */;
+		};
+		6AF8D97C1EC967F600F9D951 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6AF8D9751EC967F600F9D951 /* CacheService */;
+			targetProxy = 6AF8D97B1EC967F600F9D951 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6AF8D9931EC96A6100F9D951 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				6AF8D9461EC9670A00F9D951 /* Base */,
+				6AF8D9941EC96A6100F9D951 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		6AF8D9951EC96A6100F9D951 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6AF8D9961EC96A6100F9D951 /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -261,27 +918,190 @@
 		};
 		6AF8D94C1EC9670A00F9D951 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 44BC457A43A7A345DB5BBC4F /* Pods-HNTaxi.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 858CBVXSWP;
 				INFOPLIST_FILE = HNTaxi/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.play.HNTaxi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = HNTaxi/HNTaxi_Bridge_Header.h;
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		6AF8D94D1EC9670A00F9D951 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8106EEE9E592B92EFCA758B /* Pods-HNTaxi.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 858CBVXSWP;
 				INFOPLIST_FILE = HNTaxi/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.play.HNTaxi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = HNTaxi/HNTaxi_Bridge_Header.h;
 				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		6AF8D95C1EC967CF00F9D951 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D9866EB90FE1A49CBF1CA94F /* Pods-HNTaxiKit.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 858CBVXSWP;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = HNTaxiKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.play.HNTaxiKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		6AF8D95D1EC967CF00F9D951 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 21982FACE9295100C1CAAFB7 /* Pods-HNTaxiKit.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 858CBVXSWP;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = HNTaxiKit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.play.HNTaxiKit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		6AF8D96F1EC967E700F9D951 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 62B08F3E1B39846C83AD19B9 /* Pods-NetworkService.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 858CBVXSWP;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = NetworkService/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.play.NetworkService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		6AF8D9701EC967E700F9D951 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E068708043350071F51292A5 /* Pods-NetworkService.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 858CBVXSWP;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = NetworkService/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.play.NetworkService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		6AF8D9801EC967F600F9D951 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C9422DB054DD93664F334D98 /* Pods-CacheService.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 858CBVXSWP;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = CacheService/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.play.CacheService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		6AF8D9811EC967F600F9D951 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A3494538BC4229360698B4D /* Pods-CacheService.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 858CBVXSWP;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = CacheService/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.play.CacheService;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -304,6 +1124,34 @@
 				6AF8D94D1EC9670A00F9D951 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6AF8D95E1EC967CF00F9D951 /* Build configuration list for PBXNativeTarget "HNTaxiKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AF8D95C1EC967CF00F9D951 /* Debug */,
+				6AF8D95D1EC967CF00F9D951 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6AF8D96E1EC967E700F9D951 /* Build configuration list for PBXNativeTarget "NetworkService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AF8D96F1EC967E700F9D951 /* Debug */,
+				6AF8D9701EC967E700F9D951 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6AF8D97F1EC967F600F9D951 /* Build configuration list for PBXNativeTarget "CacheService" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AF8D9801EC967F600F9D951 /* Debug */,
+				6AF8D9811EC967F600F9D951 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
