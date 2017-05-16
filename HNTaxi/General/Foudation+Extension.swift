@@ -43,24 +43,24 @@ extension Observable {
     }
     
     
-    public func mapToResult(error: String) -> Observable<HNTResult<Element>> {
-        return self.map({ element -> HNTResult<Element> in
-                return HNTResult<Element>.success(value: element)
+    public func mapToResult(error: String) -> Observable<HTResult<Element>> {
+        return self.map({ element -> HTResult<Element> in
+                return HTResult<Element>.success(value: element)
             })
-            .catchError({ e -> Observable<HNTResult<Element>> in
-                let res = HNTResult<Element>.error(error: e)
-                return Observable<HNTResult<Element>>.just(res)
+            .catchError({ e -> Observable<HTResult<Element>> in
+                let res = HTResult<Element>.error(error: e)
+                return Observable<HTResult<Element>>.just(res)
             })
     }
     
     
-    public func mapToType<T>(success: T, error: T) -> Observable<HNTResult<T>> {
-        return self.map({ _ -> HNTResult<T> in
-                return HNTResult<T>.success(value: success)
+    public func mapToType<T>(success: T, error: T) -> Observable<HTResult<T>> {
+        return self.map({ _ -> HTResult<T> in
+                return HTResult<T>.success(value: success)
             })
-            .catchError({ e -> Observable<HNTResult<T>> in
-                let res = HNTResult<T>.error(error: e)
-                return Observable<HNTResult<T>>.just(res)
+            .catchError({ e -> Observable<HTResult<T>> in
+                let res = HTResult<T>.error(error: e)
+                return Observable<HTResult<T>>.just(res)
             })
     }
     

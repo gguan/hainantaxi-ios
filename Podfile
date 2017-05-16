@@ -27,6 +27,7 @@ def uiframework
     pod 'SnapKit'
     pod 'MJRefresh'
     pod 'AMap3DMap'
+    pod 'SwiftMessages'
 end
 
 def cacheframework

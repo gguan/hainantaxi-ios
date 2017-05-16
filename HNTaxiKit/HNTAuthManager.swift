@@ -1,5 +1,5 @@
 //
-//  HNTAuthManager.swift
+//  HTAuthManager.swift
 //  HNTaxi
 //
 //  Created by Tbxark on 15/05/2017.
@@ -11,14 +11,14 @@ import NetworkService
 import CacheService
 import ObjectMapper
 
-public class HNTAuthManager {
-    static public let `default` = HNTAuthManager()
+public class HTAuthManager {
+    static public let `default` = HTAuthManager()
     static var token: String? {
-        return HNTAuthManager.default.auth?.accessToken
+        return HTAuthManager.default.auth?.accessToken
     }
     private let keychainCache = KeychainCache(name: "com.play.hntaxi.auth")
     private let userdefaultCache = UserDefaultsCache(name: "com.play.hntaxi.auth")
-    private var auth: HNTAuthRespone? {
+    private var auth: HTAuthRespone? {
         didSet {
             authChangeSubject.on(.next(auth?.accessToken != nil))
         }
@@ -45,14 +45,14 @@ public class HNTAuthManager {
     
     public func readCache() -> Bool {
         guard let s: String = keychainCache?.syncReadCache(forKey: "auth")?.stringValue() ?? userdefaultCache?.syncReadCache(forKey: "auth") as? String else { return false}
-        guard let model = Mapper<HNTAuthRespone>().map(JSONString: s) else { return false }
+        guard let model = Mapper<HTAuthRespone>().map(JSONString: s) else { return false }
         guard let date = model.expires, date.timeIntervalSinceNow > 600 else { return  false}
         auth = model
         return true
     }
     
     public func mobile(country: String, phone: String, code: String) -> Observable<Void> {
-        let signal: Observable<HNTAuthRespone> =  HNTNetworking.modelNetRequest(HNTRequest.Admin.mobileLogin(country: country, phone: phone, code: code))
+        let signal: Observable<HTAuthRespone> =  HTNetworking.modelNetRequest(HTRequest.Admin.mobileLogin(country: country, phone: phone, code: code))
         return signal.do(onNext: { respone in
             guard let json = respone.toJSONString() else { return }
             self.keychainCache?.asnycCache(value: CacheableValue.string(value: json), forKey: "auth", complete: nil)

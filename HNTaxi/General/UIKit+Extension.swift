@@ -13,7 +13,7 @@ import SVProgressHUD
 import YYWebImage
 
 extension SVProgressHUD {
-    static func showResult(_ result: HNTResult<String>) {
+    static func showResult(_ result: HTResult<String>) {
         switch result {
         case .success(let value):
             SVProgressHUD.showSuccess(withStatus: value)
@@ -31,12 +31,38 @@ extension UIButton {
         setImage(image, for: .normal)
         imageView?.contentMode = .scaleAspectFit
     }
-    
-    func setNormalImage(_ image: UIImage?) {
-        setImage(image, for: .normal)
+
+    var title: String? {
+        set {
+            setTitle(newValue, for: .normal)
+        }
+        get {
+            return title(for: .normal)
+        }
     }
-    func setNormalTitle( _ title: String?) {
-        setTitle(title, for: .normal)
+    var disableTitle: String? {
+        set {
+            setTitle(newValue, for: .disabled)
+        }
+        get {
+            return title(for: .disabled)
+        }
+    }
+    var image: UIImage? {
+        set {
+            setImage(newValue, for: .normal)
+        }
+        get {
+            return image(for: .normal)
+        }
+    }
+    var disableImage: UIImage? {
+        set {
+            setImage(image, for: .disabled)
+        }
+        get {
+            return image(for: .disabled)
+        }
     }
 }
 
@@ -279,6 +305,37 @@ extension UIImageView {
         yy_setImage(with: url, options: YYWebImageOptions.setImageWithFadeAnimation)
     }
 }
+
+
+
+extension UIViewController {
+    
+    func embedInNavigation<T:UINavigationController>(_ type: T.Type = T.self) -> T {
+        return T(rootViewController: self)
+    }
+    
+    func printSelfType() {
+        let type = NSStringFromClass(self.classForCoder.self)
+        print(type)
+    }
+    
+    func close(animated: Bool = true, forceDismiss: Bool = false, completion: (() -> Void)? = nil) {
+        if forceDismiss {
+            dismiss(animated: animated, completion: completion)
+        } else if let nav = navigationController {
+            if let vc = nav.visibleViewController, vc == self, nav.viewControllers.count == 1 {
+                dismiss(animated: animated, completion: completion)
+            } else {
+                nav.popViewController(animated: animated)
+            }
+        } else {
+            dismiss(animated: animated, completion: completion)
+        }
+    }
+}
+
+
+
 
 
 

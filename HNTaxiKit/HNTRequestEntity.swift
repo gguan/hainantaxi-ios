@@ -1,5 +1,5 @@
 //
-//  HNTRequestEntity.swift
+//  HTRequestEntity.swift
 //  HNTaxi
 //
 //  Created by Tbxark on 15/05/2017.

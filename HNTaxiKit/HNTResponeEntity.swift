@@ -1,5 +1,5 @@
 //
-//  HNTResponeEntity.swift
+//  HTResponeEntity.swift
 //  HNTaxi
 //
 //  Created by Tbxark on 15/05/2017.
@@ -9,97 +9,9 @@
 import ObjectMapper
 import CoreLocation
 
-public func  HNTBuildError(code: Int, reson: String) -> Error {
-    return NSError(domain: "com.play.wenovel", code: code, userInfo: [NSLocalizedDescriptionKey: reson])
-}
-
-
-public let IDNOTFOUND = "IDNOTFOUND"
-extension String {
-    public var isValidId: Bool {
-        return self != "" && self != IDNOTFOUND
-    }
-}
-
-
-class HNTDateTransform: TransformType {
-    
-    typealias Object = Date
-    typealias JSON = Double
-    
-    init() {}
-    
-    func transformFromJSON(_ value: Any?) -> Object? {
-        if let timeInt = value as? Double {
-            return Date(timeIntervalSince1970: TimeInterval(timeInt/1000))
-        }
-        return nil
-    }
-    
-    func transformToJSON(_ value: Object?) -> JSON? {
-        if let date = value {
-            return Double(date.timeIntervalSince1970) * 1000
-        }
-        return nil
-    }
-}
-
-
-class LocationCoordinate2DTransform: TransformType {
-    typealias Object = CLLocationCoordinate2D
-    typealias JSON = [String: Double]
-    
-    init() {}
-    
-    func transformFromJSON(_ value: Any?) -> Object? {
-        let map = JsonMapper(value)
-        let lat = map["lat"].doubleValue
-        let log = map["log"].doubleValue
-        guard let y = lat, let x = log else { return nil }
-        return CLLocationCoordinate2D(latitude: y, longitude: x)
-    }
-    
-    func transformToJSON(_ value: Object?) -> JSON? {
-        guard let v = value else { return nil }
-        return ["lat": v.latitude, "log": v.longitude]
-    }
-}
-
-public struct Transform {
-    static let date = HNTDateTransform()
-    static let url = URLTransform()
-    static let coordinate = LocationCoordinate2DTransform()
-}
-
-
-public enum ValidationResult {
-    case ok(message: String)
-    case empty
-    case validating
-    case failed(message: String)
-    public var isValid: Bool {
-        switch self {
-        case .ok:
-            return true
-        default:
-            return false
-        }
-    }
-}
-
-public protocol BaseModel: Equatable {
-    var id: String? { get }
-}
-
-
-public func == <T: BaseModel>(lhs: T, rhs: T) -> Bool {
-    guard  let l = lhs.id, let r = rhs.id else { return false }
-    return l == r
-}
-
 
 // MARK: Respone
-public struct HNTAuthRespone: Mappable {
+public struct HTAuthRespone: Mappable {
     public private(set) var expires: Date?
     public private(set) var accessToken: String?
     public init?(map: Map) {
@@ -112,7 +24,7 @@ public struct HNTAuthRespone: Mappable {
 
 
 
-public struct HNTLocation: Mappable {
+public struct HTLocation: Mappable {
     public private(set) var coordinate: CLLocationCoordinate2D?
     public private(set) var name: String?
     public private(set) var cityCode: String?
@@ -136,21 +48,41 @@ public struct HNTLocation: Mappable {
 }
 
 
-public struct HNPath: Mappable {
+public struct HTPath: Mappable {
     public private(set) var distance: Int?
     public private(set) var duration: Int?
     public private(set) var tolls: Double?
+    public private(set) var lineCoordinates: [CLLocationCoordinate2D]?
     public init?(map: Map) {
+        lineCoordinates = [CLLocationCoordinate2D]()
     }
-    public init(distance: Int?, duration: Int?, tolls: Double?) {
+    public init(distance: Int?, duration: Int?, tolls: Double?, lineCoordinates:[CLLocationCoordinate2D]?) {
         self.distance = distance
         self.duration = duration
         self.tolls = tolls
+        self.lineCoordinates = lineCoordinates 
     }
     public mutating func mapping(map: Map) {
         distance <- map["distance"]
         duration <- map["duration"]
         tolls <- map["tolls"]
+        lineCoordinates <- map["lineCoordinates"]
     }
+}
+
+
+public enum HTDriverState: String {
+    case offLine = "offLine"
+    case wait = "wait"
+    case inOrder = "inOrder"
+}
+
+
+public enum HTPathConsumerState: String {
+    case origin = "origin"
+    case confirmDestination = "confirmdestination"
+    case callTaxi = "calltaxi"
+    case onTaxi = "ontaxi"
+    case finishPay = "finishpay"
 }
 

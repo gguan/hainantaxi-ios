@@ -11,6 +11,7 @@ import RxSwift
 import HNTaxiKit
 import CoreLocation
 
+typealias Coordinate2D = CLLocationCoordinate2D
 typealias MapSearchCompletionBlock = (_ request: AMapSearchObject, _ response: AMapSearchObject?, _ error: NSError?) -> Void;
 
 
@@ -28,9 +29,11 @@ extension CLLocationCoordinate2D {
     }
 }
 
+
+
 extension AMapPOI {
-    var hnLocation: HNTLocation {
-        return HNTLocation(coordinate: location.cooridinate, name: name, cityCode: citycode, address: address)
+    var hnLocation: HTLocation {
+        return HTLocation(coordinate: location.cooridinate, name: name, cityCode: citycode, address: address)
     }
 }
 
@@ -45,9 +48,9 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
     }
     
     
-    static func searchPOIKeywords(city: String, keywords: String ) -> Observable<[HNTLocation]> {
+    static func searchPOIKeywords(city: String, keywords: String ) -> Observable<[HTLocation]> {
         guard !city.isEmpty && !keywords.isEmpty else {
-            return Observable<[HNTLocation]>.just([])
+            return Observable<[HTLocation]>.just([])
         }
         let request = AMapPOIKeywordsSearchRequest()
         request.requireExtension = true
@@ -59,7 +62,7 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
                 if let e = error {
                     anyObserver.on(.error(e))
                 } else if let aResponse = res as? AMapPOISearchResponse {
-                    let locations = aResponse.pois?.map({ (poi: AMapPOI) -> HNTLocation in
+                    let locations = aResponse.pois?.map({ (poi: AMapPOI) -> HTLocation in
                         return poi.hnLocation
                     })
                     anyObserver.on(.next(locations ?? []))
@@ -73,7 +76,7 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
     }
     
     
-    static func searchReGeocode(coordinate: CLLocationCoordinate2D) -> Observable<HNTLocation> {
+    static func searchReGeocode(coordinate: CLLocationCoordinate2D, ingorePOI: Bool = true) -> Observable<HTLocation> {
         let regeo = AMapReGeocodeSearchRequest()
         regeo.location = coordinate.aMapGeoPoint
         regeo.requireExtension = true
@@ -83,9 +86,13 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
                 if let e = error {
                     anyObserver.on(.error(e))
                 } else if let aResponse = res as? AMapReGeocodeSearchResponse {
-                    if let poi = aResponse.regeocode?.pois?.first {
+                    var isReturn = false
+                    if !ingorePOI, let poi = aResponse.regeocode?.pois?.first {
                         anyObserver.on(.next(poi.hnLocation))
-                    } else {
+                        isReturn = true
+                    }
+                    
+                    if !isReturn {
                         let coordinate = aResponse.regeocode?.addressComponent?.streetNumber?.location?.cooridinate
                         var name = (aResponse.regeocode?.addressComponent?.township ?? "")
                         name += (aResponse.regeocode?.addressComponent?.neighborhood ?? "")
@@ -94,7 +101,11 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
                         name += (aResponse.regeocode?.addressComponent?.building ?? "")
                         let address = aResponse.regeocode?.addressComponent?.citycode
                         let cityCode = aResponse.regeocode?.addressComponent?.citycode
-                        let location =  HNTLocation(coordinate: coordinate, name: name, cityCode: cityCode, address: address)
+                        let location =  HTLocation(coordinate: coordinate, name: name, cityCode: cityCode, address: address)
+                        print("POI \( aResponse.regeocode?.pois?.first?.hnLocation.name ?? "")")
+                        print("Formate: \(aResponse.regeocode?.formattedAddress ?? "")")
+                        print("Name: \(name)")
+                        print(" ---------- ")
                         anyObserver.on(.next(location))
                     }
                     anyObserver.on(.completed)
@@ -106,18 +117,35 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
         })
     }
     
-    static func searchPathInfo(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D) -> Observable<HNPath> {
+    static func searchPathInfo(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D) -> Observable<HTPath> {
         let navi = AMapDrivingRouteSearchRequest()
         navi.requireExtension = true
         navi.origin = from.aMapGeoPoint
         navi.destination = to.aMapGeoPoint
+        navi.strategy = 5
+        func stringToCoordinates( _ text: String) -> [CLLocationCoordinate2D] {
+            return text.components(separatedBy: ";")
+                .flatMap { (subText: String) -> CLLocationCoordinate2D? in
+                    let xy = subText.components(separatedBy: ",")
+                    guard xy.count == 2,
+                        let ystr = xy.last,
+                        let y = Double(ystr),
+                        let xstr = xy.first,
+                        let x = Double(xstr)  else { return nil }
+                    return CLLocationCoordinate2D(latitude: y, longitude: x)
+                }
+        }
         return Observable.create({ anyObserver -> Disposable in
             MapSearchManager.shared.searchForRequest(request: navi, completionBlock: {
                 (req: AMapSearchObject, res: AMapSearchObject?, error: NSError?) in
                 if let e = error {
                     anyObserver.on(.error(e))
-                } else if let aResponse = (res as? AMapRouteSearchResponse)?.route?.paths?.first {
-                    let path = HNPath(distance: aResponse.distance, duration: aResponse.duration, tolls: Double(aResponse.tolls))
+                } else if let route = (res as? AMapRouteSearchResponse)?.route, let path = route.paths?.first {
+                    let points =  path.steps?.flatMap({ (step: AMapStep) -> [CLLocationCoordinate2D] in
+                        guard let line = step.polyline else { return [] }
+                        return stringToCoordinates(line)
+                    })
+                    let path = HTPath(distance: path.distance, duration: path.duration, tolls: Double(route.taxiCost), lineCoordinates: points)
                     anyObserver.on(.next(path))
                     anyObserver.on(.completed)
                 } else {

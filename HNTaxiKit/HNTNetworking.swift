@@ -12,7 +12,7 @@ import RxSwift
 
 
 
-public enum HNTResult<T> {
+public enum HTResult<T> {
     case success(value: T)
     case error(error: Error)
     public func isSuccess() -> Bool {
@@ -23,7 +23,7 @@ public enum HNTResult<T> {
     }
 }
 
-public struct HNTHTTPResponseModel: HTTPResponseModel {
+public struct HTHTTPResponseModel: HTTPResponseModel {
     public var code: Int?
     public var message: String?
     public var data: Any?
@@ -38,8 +38,8 @@ public struct HNTHTTPResponseModel: HTTPResponseModel {
 }
 
 
-public typealias HNTRequestType = RequestParameters
-public struct HNTRequest {
+public typealias HTRequestType = RequestParameters
+public struct HTRequest {
     
     public enum Admin: RequestParameters {
         
@@ -75,24 +75,24 @@ public struct HNTRequest {
 }
 
 
-public typealias HNTNetRequestErrorHandle = (URLRequest, Error) -> Void
-public final class HNTNetworking: RequestManager {
-    public static let `default` = HNTNetworking()
+public typealias HTNetRequestErrorHandle = (URLRequest, Error) -> Void
+public final class HTNetworking: RequestManager {
+    public static let `default` = HTNetworking()
     
-    fileprivate let client: NetworkClient<HNTHTTPResponseModel>
-    public var noAuthErrorHandle: HNTNetRequestErrorHandle?
-    public var commonErrorHandle: HNTNetRequestErrorHandle?
+    fileprivate let client: NetworkClient<HTHTTPResponseModel>
+    public var noAuthErrorHandle: HTNetRequestErrorHandle?
+    public var commonErrorHandle: HTNetRequestErrorHandle?
     
     private init() {
         let config = NetworkClientConfig(name: "WeNovelNetWorking", schema: "http", host: "52.197.229.254", port: 4400)
-        client = NetworkClient<HNTHTTPResponseModel>(config: config)
+        client = NetworkClient<HTHTTPResponseModel>(config: config)
         _ = client.setRequestManager(self)
         
     }
     
     public func configure(request: URLRequest) -> URLRequest {
         var req = request
-        req.setValue(HNTAuthManager.token, forHTTPHeaderField: "X-Auth-Token")
+        req.setValue(HTAuthManager.token, forHTTPHeaderField: "X-Auth-Token")
         return req
     }
     
@@ -108,21 +108,21 @@ public final class HNTNetworking: RequestManager {
 }
 
 
-public extension HNTNetworking {
+public extension HTNetworking {
     public static func modelNetRequest<T:Mappable>(_ type: RequestParameters, key: String? = nil) -> Observable<T> {
-        return HNTNetworking.default.client.modelNetRequest(type, key: key)
+        return HTNetworking.default.client.modelNetRequest(type, key: key)
     }
     
     public static func modelArrayNetRequest<T:Mappable>(_ type: RequestParameters, key: String? = nil) -> Observable<[T]> {
-        return HNTNetworking.default.client.modelArrayNetRequest(type, key: key)
+        return HTNetworking.default.client.modelArrayNetRequest(type, key: key)
     }
     
     public static func netRequest<T>(_ type: RequestParameters, transform: @escaping ((Any) -> (T?))) -> Observable<(T)> {
-        return HNTNetworking.default.client.netRequest(type, transform: transform)
+        return HTNetworking.default.client.netRequest(type, transform: transform)
     }
     
     public static func netDefaultRequest(_ type: RequestParameters) -> Observable<Any> {
-        return HNTNetworking.default.client.netDefaultRequest(type)
+        return HTNetworking.default.client.netDefaultRequest(type)
     }
 }
 

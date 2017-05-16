@@ -39,4 +39,14 @@ extension R {
         static let medium: CGFloat = 10
         static let large: CGFloat = 14
     }
+
 }
+
+
+struct Color {
+    static let orange = UIColor(red:1.000, green:0.694, blue:0.180, alpha:1.000)
+    static let blue = UIColor(red:0.153, green:0.576, blue:0.976, alpha:1.000)
+}
+
+
+

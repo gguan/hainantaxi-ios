@@ -21,8 +21,17 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
   
-  /// This `R.file` struct is generated, and contains static references to 0 files.
+  /// This `R.file` struct is generated, and contains static references to 1 files.
   struct file {
+    /// Resource file `style_json.json`.
+    static let style_jsonJson = Rswift.FileResource(bundle: R.hostingBundle, name: "style_json", pathExtension: "json")
+    
+    /// `bundle.url(forResource: "style_json", withExtension: "json")`
+    static func style_jsonJson(_: Void = ()) -> Foundation.URL? {
+      let fileResource = R.file.style_jsonJson
+      return fileResource.bundle.url(forResource: fileResource)
+    }
+    
     fileprivate init() {}
   }
   
@@ -31,8 +40,10 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
   
-  /// This `R.image` struct is generated, and contains static references to 31 images.
+  /// This `R.image` struct is generated, and contains static references to 38 images.
   struct image {
+    /// Image `bg_wite_card`.
+    static let bg_wite_card = Rswift.ImageResource(bundle: R.hostingBundle, name: "bg_wite_card")
     /// Image `icon_add`.
     static let icon_add = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_add")
     /// Image `icon_arrow_down`.
@@ -95,6 +106,23 @@ struct R: Rswift.Validatable {
     static let icon_to = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_to")
     /// Image `icon_user`.
     static let icon_user = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_user")
+    /// Image `map_mine_location`.
+    static let map_mine_location = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_mine_location")
+    /// Image `map_pio_location`.
+    static let map_pio_location = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_pio_location")
+    /// Image `map_select_location`.
+    static let map_select_location = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_select_location")
+    /// Image `map_select_point`.
+    static let map_select_point = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_select_point")
+    /// Image `map_switch_to_location`.
+    static let map_switch_to_location = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_switch_to_location")
+    /// Image `title_label`.
+    static let title_label = Rswift.ImageResource(bundle: R.hostingBundle, name: "title_label")
+    
+    /// `UIImage(named: "bg_wite_card", bundle: ..., traitCollection: ...)`
+    static func bg_wite_card(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.bg_wite_card, compatibleWith: traitCollection)
+    }
     
     /// `UIImage(named: "icon_add", bundle: ..., traitCollection: ...)`
     static func icon_add(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
@@ -251,6 +279,36 @@ struct R: Rswift.Validatable {
       return UIKit.UIImage(resource: R.image.icon_user, compatibleWith: traitCollection)
     }
     
+    /// `UIImage(named: "map_mine_location", bundle: ..., traitCollection: ...)`
+    static func map_mine_location(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.map_mine_location, compatibleWith: traitCollection)
+    }
+    
+    /// `UIImage(named: "map_pio_location", bundle: ..., traitCollection: ...)`
+    static func map_pio_location(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.map_pio_location, compatibleWith: traitCollection)
+    }
+    
+    /// `UIImage(named: "map_select_location", bundle: ..., traitCollection: ...)`
+    static func map_select_location(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.map_select_location, compatibleWith: traitCollection)
+    }
+    
+    /// `UIImage(named: "map_select_point", bundle: ..., traitCollection: ...)`
+    static func map_select_point(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.map_select_point, compatibleWith: traitCollection)
+    }
+    
+    /// `UIImage(named: "map_switch_to_location", bundle: ..., traitCollection: ...)`
+    static func map_switch_to_location(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.map_switch_to_location, compatibleWith: traitCollection)
+    }
+    
+    /// `UIImage(named: "title_label", bundle: ..., traitCollection: ...)`
+    static func title_label(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.title_label, compatibleWith: traitCollection)
+    }
+    
     fileprivate init() {}
   }
   
@@ -269,21 +327,14 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
   
-  /// This `R.storyboard` struct is generated, and contains static references to 2 storyboards.
+  /// This `R.storyboard` struct is generated, and contains static references to 1 storyboards.
   struct storyboard {
     /// Storyboard `LaunchScreen`.
     static let launchScreen = _R.storyboard.launchScreen()
-    /// Storyboard `Main`.
-    static let main = _R.storyboard.main()
     
     /// `UIStoryboard(name: "LaunchScreen", bundle: ...)`
     static func launchScreen(_: Void = ()) -> UIKit.UIStoryboard {
       return UIKit.UIStoryboard(resource: R.storyboard.launchScreen)
-    }
-    
-    /// `UIStoryboard(name: "Main", bundle: ...)`
-    static func main(_: Void = ()) -> UIKit.UIStoryboard {
-      return UIKit.UIStoryboard(resource: R.storyboard.main)
     }
     
     fileprivate init() {}
@@ -296,7 +347,7 @@ struct R: Rswift.Validatable {
   
   fileprivate struct intern: Rswift.Validatable {
     fileprivate static func validate() throws {
-      // There are no resources to validate
+      try _R.validate()
     }
     
     fileprivate init() {}
@@ -307,26 +358,29 @@ struct R: Rswift.Validatable {
   fileprivate init() {}
 }
 
-struct _R {
+struct _R: Rswift.Validatable {
+  static func validate() throws {
+    try storyboard.validate()
+  }
+  
   struct nib {
     fileprivate init() {}
   }
   
-  struct storyboard {
-    struct launchScreen: Rswift.StoryboardResourceWithInitialControllerType {
+  struct storyboard: Rswift.Validatable {
+    static func validate() throws {
+      try launchScreen.validate()
+    }
+    
+    struct launchScreen: Rswift.StoryboardResourceWithInitialControllerType, Rswift.Validatable {
       typealias InitialController = UIKit.UIViewController
       
       let bundle = R.hostingBundle
       let name = "LaunchScreen"
       
-      fileprivate init() {}
-    }
-    
-    struct main: Rswift.StoryboardResourceWithInitialControllerType {
-      typealias InitialController = ViewController
-      
-      let bundle = R.hostingBundle
-      let name = "Main"
+      static func validate() throws {
+        if UIKit.UIImage(named: "title_label") == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'title_label' is used in storyboard 'LaunchScreen', but couldn't be loaded.") }
+      }
       
       fileprivate init() {}
     }
