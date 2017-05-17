@@ -55,9 +55,11 @@ public class HTAuthManager {
         let signal: Observable<HTAuthRespone> =  HTNetworking.modelNetRequest(HTRequest.Admin.mobileLogin(country: country, phone: phone, code: code))
         return signal.do(onNext: { respone in
             guard let json = respone.toJSONString() else { return }
-            self.keychainCache?.asnycCache(value: CacheableValue.string(value: json), forKey: "auth", complete: nil)
-            self.userdefaultCache?.asnycCache(value: json, forKey: "auth", complete: nil)
-        })
+            let k = self.keychainCache?.syncCache(value: CacheableValue.string(value: json), forKey: "auth") ?? false
+            let u = self.userdefaultCache?.syncCache(value: json, forKey: "auth") ?? false
+            print("KeyChain Cache Result: \(k), UserDefault Cache Result: \(u)")
+            self.auth = respone
+            })
             .map({ _ in return () })
         
     }

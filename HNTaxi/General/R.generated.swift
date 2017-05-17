@@ -40,7 +40,7 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
   
-  /// This `R.image` struct is generated, and contains static references to 38 images.
+  /// This `R.image` struct is generated, and contains static references to 41 images.
   struct image {
     /// Image `bg_wite_card`.
     static let bg_wite_card = Rswift.ImageResource(bundle: R.hostingBundle, name: "bg_wite_card")
@@ -106,6 +106,8 @@ struct R: Rswift.Validatable {
     static let icon_to = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_to")
     /// Image `icon_user`.
     static let icon_user = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_user")
+    /// Image `map_end_point`.
+    static let map_end_point = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_end_point")
     /// Image `map_mine_location`.
     static let map_mine_location = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_mine_location")
     /// Image `map_pio_location`.
@@ -114,8 +116,12 @@ struct R: Rswift.Validatable {
     static let map_select_location = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_select_location")
     /// Image `map_select_point`.
     static let map_select_point = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_select_point")
+    /// Image `map_start_point`.
+    static let map_start_point = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_start_point")
     /// Image `map_switch_to_location`.
     static let map_switch_to_location = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_switch_to_location")
+    /// Image `nav_back_icon`.
+    static let nav_back_icon = Rswift.ImageResource(bundle: R.hostingBundle, name: "nav_back_icon")
     /// Image `title_label`.
     static let title_label = Rswift.ImageResource(bundle: R.hostingBundle, name: "title_label")
     
@@ -279,6 +285,11 @@ struct R: Rswift.Validatable {
       return UIKit.UIImage(resource: R.image.icon_user, compatibleWith: traitCollection)
     }
     
+    /// `UIImage(named: "map_end_point", bundle: ..., traitCollection: ...)`
+    static func map_end_point(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.map_end_point, compatibleWith: traitCollection)
+    }
+    
     /// `UIImage(named: "map_mine_location", bundle: ..., traitCollection: ...)`
     static func map_mine_location(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.map_mine_location, compatibleWith: traitCollection)
@@ -299,9 +310,19 @@ struct R: Rswift.Validatable {
       return UIKit.UIImage(resource: R.image.map_select_point, compatibleWith: traitCollection)
     }
     
+    /// `UIImage(named: "map_start_point", bundle: ..., traitCollection: ...)`
+    static func map_start_point(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.map_start_point, compatibleWith: traitCollection)
+    }
+    
     /// `UIImage(named: "map_switch_to_location", bundle: ..., traitCollection: ...)`
     static func map_switch_to_location(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.map_switch_to_location, compatibleWith: traitCollection)
+    }
+    
+    /// `UIImage(named: "nav_back_icon", bundle: ..., traitCollection: ...)`
+    static func nav_back_icon(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.nav_back_icon, compatibleWith: traitCollection)
     }
     
     /// `UIImage(named: "title_label", bundle: ..., traitCollection: ...)`

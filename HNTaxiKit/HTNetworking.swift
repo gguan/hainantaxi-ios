@@ -60,8 +60,8 @@ public struct HTRequest {
                 return RequestEntity(GET: "auth/uploadToken")
             case .mobileLogin(let country, let phone, let code):
                 return RequestEntity(POST: "authenticate/mobile")
-                    .addDictBody(["country": country,
-                                  "phone": phone,
+                    .addDictBody(["zone": country,
+                                  "mobile": phone,
                                   "code": code])
             case .oauthLogin(let type, let uuid, let token):
                 return RequestEntity(POST: "authenticate/\(type)")
@@ -84,7 +84,7 @@ public final class HTNetworking: RequestManager {
     public var commonErrorHandle: HTNetRequestErrorHandle?
     
     private init() {
-        let config = NetworkClientConfig(name: "WeNovelNetWorking", schema: "http", host: "52.197.229.254", port: 4400)
+        let config = NetworkClientConfig(name: "WeNovelNetWorking", schema: "http", host: "106.14.202.84", port: 4400)
         client = NetworkClient<HTHTTPResponseModel>(config: config)
         _ = client.setRequestManager(self)
         

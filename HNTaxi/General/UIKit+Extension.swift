@@ -160,6 +160,10 @@ extension UIImage {
         })
         return UIGraphicsGetImageFromCurrentImageContext()
     }
+    
+    func resizeToNavigationItem() -> UIImage {
+        return resize(maxWidth: 16, maxHeight: 16)
+    }
 
     // 可根据指定 尺寸,或最大尺寸缩放图形
     func resize(_ width: CGFloat? = nil, height: CGFloat? = nil, maxWidth: CGFloat? = nil, maxHeight: CGFloat? = nil) -> UIImage {

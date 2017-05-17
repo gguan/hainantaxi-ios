@@ -44,8 +44,12 @@ extension R {
 
 
 struct Color {
-    static let orange = UIColor(red:1.000, green:0.694, blue:0.180, alpha:1.000)
-    static let blue = UIColor(red:0.153, green:0.576, blue:0.976, alpha:1.000)
+    static let orange    = UIColor(red:1.000, green:0.694, blue:0.180, alpha:1.000)
+    static let blue      = UIColor(red:0.153, green:0.576, blue:0.976, alpha:1.000)
+    static let bgGay     = UIColor(white: 0.9, alpha: 1)
+    static let textBlack = UIColor(white: 0.1, alpha: 1)
+    static let textDarkGray = UIColor(white: 0.3, alpha: 1)
+
 }
 
 

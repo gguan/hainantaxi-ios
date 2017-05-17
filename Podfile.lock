@@ -15,6 +15,7 @@ PODS:
   - IQKeyboardManagerSwift (4.0.9)
   - KeychainAccess (3.0.2)
   - MJRefresh (3.1.12)
+  - MOBFoundation_IDFA (2.2.19)
   - MonkeyKing (1.2.3)
   - ObjectMapper (2.2.6)
   - R.swift (3.2.0):
@@ -23,8 +24,11 @@ PODS:
   - RxCocoa (3.4.1):
     - RxSwift (~> 3.4)
   - RxSwift (3.4.1)
+  - SMSSDK (2.1.5):
+    - MOBFoundation_IDFA
   - SnapKit (3.2.0)
   - SVProgressHUD (2.1.2)
+  - SwiftMessages (3.3.3)
   - SwiftyTimer (2.0.0)
   - YYCache (1.0.4)
   - YYImage (1.0.4):
@@ -46,13 +50,16 @@ DEPENDENCIES:
   - IQKeyboardManagerSwift
   - KeychainAccess
   - MJRefresh
+  - MOBFoundation_IDFA
   - MonkeyKing
   - ObjectMapper
   - R.swift
   - RxCocoa (~> 3.0)
   - RxSwift (~> 3.0)
+  - SMSSDK
   - SnapKit
   - SVProgressHUD
+  - SwiftMessages
   - YYCache
   - YYImage/WebP
   - YYText
@@ -69,20 +76,23 @@ SPEC CHECKSUMS:
   IQKeyboardManagerSwift: 2eefe6c429b86aa08bfbc1b5c891164d754adf91
   KeychainAccess: a986406022dfc7c634c691ad3bec670cc6a32002
   MJRefresh: b96cdb21c4aa75a7b07654311ab2f315c497e806
+  MOBFoundation_IDFA: 4561562ab2364873a904a590dcdffea9f10ab8c6
   MonkeyKing: 1cfd8fb7984f1d747c1f7c1179d755f8cc58e9b4
   ObjectMapper: '042708195cc46c20871cbcbec0453826398273fd'
   R.swift: 207a372a2b5977caef440c696a368009460641d1
   R.swift.Library: fbdec16c9802ad104fc1ba53415dc190e6ec5c73
   RxCocoa: a8a5f1d061d0043e28f56976829f31ce63e8eb09
   RxSwift: 656f8fbeca5bc372121a72d9ebdd3cd3bc0ffade
+  SMSSDK: 7d19654f9d36392988e96bf697afdac983808b1a
   SnapKit: 1ca44df72cfa543218d177cb8aab029d10d86ea7
   SVProgressHUD: c404a55d78acbeb7ebb78b76d3faf986475a6994
+  SwiftMessages: '09cea3336e3fb63c3578983c8aac65acaa6d884a'
   SwiftyTimer: 2efd74b060d69ad4f1496baf5bbedbe132125fcf
   YYCache: 8105b6638f5e849296c71f331ff83891a4942952
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
   YYWebImage: 5f7f36aee2ae293f016d418c7d6ba05c4863e928
 
-PODFILE CHECKSUM: 43fc1e36cb071d8571d7336c099b85c18d92bd53
+PODFILE CHECKSUM: 793a55ebc69ccc464a5f375af4e3fd0a3f89feb4
 
 COCOAPODS: 1.2.1

@@ -91,7 +91,7 @@ class MapSearchViewController: UIViewController {
             .subscribe(onNext: {[weak self] (value: [HTLocation]) in
                 self?.poiData = value
                 }, onError: { (error: Error) in
-                SVProgressHUD.showError(withStatus: error.localizedDescription ?? "")
+                    print(error)
             })
             .addDisposableTo(disposeQueue, key: "SearchPOIKeywords")
     

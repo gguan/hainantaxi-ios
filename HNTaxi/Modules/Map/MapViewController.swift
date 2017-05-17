@@ -15,53 +15,76 @@ import SVProgressHUD
 class MapViewController: UIViewController {
     // MAR: Flag
     fileprivate var isInitial = true
-    fileprivate var showPath = true
-    fileprivate var showSeletView: Bool {
+    fileprivate var canShowPath = true
+    fileprivate var isShowCenterView: Bool {
         get {
-            return !selectBubbleView.isHidden
+            return !centerBubbleView.isHidden
         }
         set {
-            selectBubbleView.isHidden = !newValue
-            selectPoint.isHidden = !newValue
+            centerBubbleView.isHidden = !newValue
+            centerSelectPoint.isHidden = !newValue
         }
     }
+    fileprivate var annotation: (start: MAPointAnnotation?, end: MAPointAnnotation?) = (nil, nil)
 
     // MARK: - Data
     fileprivate let disposeQueue = DisposeQueue()
     fileprivate let orderLocation = Variable<(from: Coordinate2D?, to: Coordinate2D?)>.init((from: nil, to: nil))
-    fileprivate var displayPath: HTPath? {
+    fileprivate var travelPath: HTPath? {
         didSet {
-            if let line = polyline {
-                polyline = nil
+            if let line = pathPolyline {
+                pathPolyline = nil
                 mapView.remove(line)
             }
-            if let path = displayPath {
+            if let path = travelPath {
                 UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
-                    self.priceCard.frame.origin.y = PricePopupCard.Layout.showY
+                    self.pricePopupCard.frame.origin.y = PricePopupCard.Layout.showY
                 }, completion: nil)
                 let dis = String(format: "%.1f", Double(path.distance ?? 0)/1000.0)
                 let price = String(format: "%.2f", path.tolls ?? 0)
-                priceCard.configureWithDataModel((distance: dis, price: price))
+                pricePopupCard.configureWithDataModel((distance: dis, price: price))
                 navigationItem.leftBarButtonItem = backItem
-                if showPath, var coordinates = path.lineCoordinates {
+                if canShowPath, var coordinates = path.lineCoordinates {
                     let line: MAPolyline = MAPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
-                    polyline = line
-                    mapView.add(polyline)
+                    pathPolyline = line
+                    mapView.add(pathPolyline)
                 }
-                showSeletView = false
+//                let test = path.lineCoordinates?.map({ c in "{log: \(c.longitude.description), lat: \(c.latitude.description)},"}).reduce("", +)
+//                print(test ?? "")
+                if let start = path.lineCoordinates?.first,
+                    let end = path.lineCoordinates?.last {
+                    let startPoint = MAPointAnnotation()
+                    startPoint.coordinate = start
+                    startPoint.title = AnnotationIden.PointType.start
+                    mapView.addAnnotation(startPoint)
+                    let endPoint = MAPointAnnotation()
+                    endPoint.coordinate = end
+                    endPoint.title = AnnotationIden.PointType.end
+                    mapView.addAnnotation(endPoint)
+                    annotation = (startPoint, endPoint)
+                }
+                isShowCenterView = false
             } else {
-                showSeletView = true
-                if priceCard.frame.origin.y.isEqual(to: PricePopupCard.Layout.showY) {
+                isShowCenterView = true
+                if pricePopupCard.frame.origin.y.isEqual(to: PricePopupCard.Layout.showY) {
                     UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
-                        self.priceCard.frame.origin.y = PricePopupCard.Layout.hideY
+                        self.pricePopupCard.frame.origin.y = PricePopupCard.Layout.hideY
                     }, completion: nil)
+                }
+                if let start = annotation.start  {
+                    mapView.removeAnnotation(start)
+                    annotation.start = nil
+                }
+                if let end = annotation.end {
+                    mapView.removeAnnotation(end)
+                    annotation.end = nil
                 }
             }
         }
     }
     
     // MARK: - Map
-    fileprivate var polyline: MAPolyline?
+    fileprivate var pathPolyline: MAPolyline?
     fileprivate let mapView = MAMapView(frame: R.Rect.default).then {
         $0.showsCompass = false
         $0.isShowsIndoorMap = false
@@ -80,28 +103,44 @@ class MapViewController: UIViewController {
     }
     
     // MARK: - Control
-    fileprivate let selectBubbleView = TextBubbleView(frame: CGRect(width: 160, height: 40))
-    fileprivate let selectPoint = UIImageView(image: R.image.map_select_point())
+    fileprivate let centerBubbleView = TextBubbleView(frame: CGRect(width: 160, height: 40))
+    fileprivate let centerSelectPoint = UIImageView(image: R.image.map_select_point())
     
-    fileprivate let switchToMyLocation = UIButton(image: R.image.map_switch_to_location())
-    fileprivate let selectLocation = LocationSelectView()
-    fileprivate let priceCard = PricePopupCard()
+    fileprivate let locationSelectView = LocationSelectView()
+    fileprivate let myLocationButton = UIButton(image: R.image.map_switch_to_location())
+    fileprivate let pricePopupCard = PricePopupCard()
     
-    fileprivate let userItem = UIBarButtonItem(image: R.image.icon_user()?.resize(maxHeight: 16),
+    fileprivate let userItem = UIBarButtonItem(image: R.image.icon_user()?.resizeToNavigationItem(),
                                                style: .plain, target: nil, action: nil)
-    fileprivate let msgItem = UIBarButtonItem(image: R.image.icon_message()?.resize(maxHeight: 16),
+    fileprivate let msgItem = UIBarButtonItem(image: R.image.icon_message()?.resizeToNavigationItem(),
                                               style: .plain, target: nil, action: nil)
     
-    fileprivate let backItem = UIBarButtonItem(image: R.image.icon_arrow_left()?.resize(maxHeight: 16),
+    fileprivate let backItem = UIBarButtonItem(image: R.image.icon_arrow_left()?.resizeToNavigationItem(),
                                               style: .plain, target: nil, action: nil)
     override func viewDidLoad() {
         super.viewDidLoad()
         layoutViewController()
         configureObservable()
+        DriverManagerService.shared.start()
         
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        for v in mapView.subviews {
+            if let imgv = v as? UIImageView,
+                imgv.frame.size.width.isEqual(to: 55),
+                imgv.frame.size.height.isEqual(to: 13),
+                imgv.frame.origin.x.isEqual(to: 5) {
+                UIView.animate(withDuration: 1, animations: { 
+                    imgv.alpha = 0
+                })
+            }
+        }
+    }
+    
     private func layoutViewController() {
+        navigationItem.title = "主页"
         navigationItem.titleView = UIImageView(image: R.image.title_label())
         navigationItem.leftBarButtonItem = userItem
         navigationItem.rightBarButtonItem = msgItem
@@ -109,51 +148,51 @@ class MapViewController: UIViewController {
         AMapServices.shared().enableHTTPS = true
         
         view.addSubview(mapView)
-        view.addSubview(selectPoint)
-        view.addSubview(selectBubbleView)
-        view.addSubview(switchToMyLocation)
-        view.addSubview(selectLocation)
-        view.addSubview(priceCard)
+        view.addSubview(centerSelectPoint)
+        view.addSubview(centerBubbleView)
+        view.addSubview(myLocationButton)
+        view.addSubview(locationSelectView)
+        view.addSubview(pricePopupCard)
+        
         
         mapView.delegate = self
         mapView.snp.makeConstraints { (make) in
             make.top.left.bottom.right.equalTo(view)
         }
-        selectPoint.contentMode = .scaleAspectFit
-        selectPoint.snp.makeConstraints { (make) in
+        centerSelectPoint.contentMode = .scaleAspectFit
+        centerSelectPoint.snp.makeConstraints { (make) in
             make.size.equalTo(CGSize(width: 30, height: 30))
             make.centerY.equalTo(view.snp.centerY).offset(-R.Height.fullNavigationBar/2 + 15)
             make.centerX.equalTo(view)
         }
-        selectBubbleView.snp.makeConstraints { (make) in
-            make.centerX.equalTo(selectPoint)
-            make.bottom.equalTo(selectPoint.snp.top).offset(-4)
+        centerBubbleView.snp.makeConstraints { (make) in
+            make.centerX.equalTo(centerSelectPoint)
+            make.bottom.equalTo(centerSelectPoint.snp.top).offset(-4)
             make.height.equalTo(40)
             make.width.equalTo(160)
         }
-        switchToMyLocation.snp.makeConstraints { (make) in
+        myLocationButton.snp.makeConstraints { (make) in
             make.size.equalTo(30)
             make.left.equalTo(view).offset(R.Margin.large)
-            make.bottom.equalTo(view.snp.bottom).offset(-100)
+            make.bottom.equalTo(view.snp.bottom).offset(-140)
         }
         
-        selectLocation.frame = CGRect(x: R.Margin.large - 5,
+        locationSelectView.frame = CGRect(x: R.Margin.large - 5,
                                       y: R.Margin.large,
                                       width: R.Width.screen - R.Margin.large * 2 + 10,
                                       height: 100)
         
-        let w = selectBubbleView.setText("在这打人")
-        selectBubbleView.snp.updateConstraints { (make) in
+        let w = centerBubbleView.setText("在这打人")
+        centerBubbleView.snp.updateConstraints { (make) in
             make.width.equalTo(w)
         }
         
-        priceCard.configureWithDataModel((distance: "100", price: "100"))
-
+        pricePopupCard.configureWithDataModel((distance: "100", price: "100"))
     }
     
     
     private func configureObservable() {
-        switchToMyLocation.rx.tap
+        myLocationButton.rx.tap
             .subscribe(onNext: {[weak self] _ in
                 guard let `self` = self else { return }
                 guard let loc = self.mapView.userLocation?.coordinate else { return }
@@ -161,19 +200,26 @@ class MapViewController: UIViewController {
             })
             .addDisposableTo(disposeQueue, key: "SwitchToMyLocation")
         
-        selectLocation.buttons.destination.rx.tap
+        locationSelectView.buttons.destination.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 guard let `self` = self else { return }
                 self.showSearchViewController()
             })
             .addDisposableTo(disposeQueue, key: "destination")
         
+        userItem.rx.tap
+            .subscribe(onNext: {[weak self] _ in
+                guard let `self` = self else { return }
+                let vc = HTAuthManager.default.isAuth ? UserViewController() : MainAuthViewController()
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
+            .addDisposableTo(disposeQueue, key: "userItem")
         backItem.rx.tap
             .subscribe(onNext: {[weak self] _ in
                 guard let `self` = self else { return }
                 self.orderLocation.value.to = nil
                 self.navigationItem.leftBarButtonItem = self.userItem
-                self.selectLocation.buttons.destination.title = "选择目的地"
+                self.locationSelectView.buttons.destination.title = "选择目的地"
             })
             .addDisposableTo(disposeQueue, key: "backItem")
     
@@ -190,14 +236,14 @@ class MapViewController: UIViewController {
     
     private func changePriceStatus(coordinate: (from: Coordinate2D?, to: Coordinate2D?)) {
         guard let f = coordinate.from, let t = coordinate.to  else {
-            self.displayPath = nil
+            self.travelPath = nil
             return
         }
         SVProgressHUD.show()
         MapSearchManager.searchPathInfo(from: f, to: t)
             .subscribe(onNext: {[weak self] (path: HTPath) in
                 guard let `self` = self else { return }
-                self.displayPath = path
+                self.travelPath = path
                 SVProgressHUD.dismiss()
             }, onError: { (error: Error) in
                 SVProgressHUD.showError(withStatus: error.localizedDescription ?? "Error")
@@ -209,7 +255,7 @@ class MapViewController: UIViewController {
     
     private func showSearchViewController() {
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
-            self.selectLocation.frame.origin.y = -200
+            self.locationSelectView.frame.origin.y = -200
         }, completion: nil)
         let vc = MapSearchViewController()
         vc.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
@@ -227,15 +273,26 @@ class MapViewController: UIViewController {
 
 extension MapViewController: MapSearchViewControllerDelegate {
     func mapSearchViewController(didDismiss vc: MapSearchViewController) {
-        self.selectLocation.frame.origin.y = R.Margin.large
+        self.locationSelectView.frame.origin.y = R.Margin.large
     }
     
     func mapSearchViewController(didSelect vc: MapSearchViewController, data: HTLocation) {
-        selectLocation.buttons.destination.title = data.name
+        locationSelectView.buttons.destination.title = data.name
         orderLocation.value.to = data.coordinate
     }
 }
 
+
+
+private struct AnnotationIden {
+    struct ReuseIndetifier {
+        static let user =  "UserLocationReuseIndetifier"
+    }
+    struct PointType {
+        static let start = "start"
+        static let end   = "end"
+    }
+}
 
 extension MapViewController: MAMapViewDelegate {
     
@@ -246,12 +303,15 @@ extension MapViewController: MAMapViewDelegate {
             .subscribeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: {[weak self] (location: HTLocation) in
                 guard let `self` = self else { return }
-                self.selectLocation.buttons.from.title = location.name
+                self.locationSelectView.buttons.from.title = location.name
             }, onError: { (error: Error) in
                 print(error)
             })
             .addDisposableTo(disposeQueue, key: "ReGeocode")
-        
+        if let point =  mapView?.centerCoordinate {
+            DriverManagerService.shared.updateSelectLocation(point)
+        }
+
     }
     func mapView(_ mapView: MAMapView!, didUpdate userLocation: MAUserLocation!, updatingLocation: Bool) {
         if isInitial, let loc = userLocation?.coordinate {
@@ -268,6 +328,29 @@ extension MapViewController: MAMapViewDelegate {
             renderer.strokeColor = Color.blue
             
             return renderer
+        }
+        return nil
+    }
+    
+    func mapView(_ mapView: MAMapView!, viewFor annotation: MAAnnotation!) -> MAAnnotationView! {
+        guard let mapView = mapView, let annotation = annotation else { return nil }
+        if let user = annotation as? MAPointAnnotation, let iden = user.title {
+            var annotationView: MAAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: AnnotationIden.ReuseIndetifier.user)
+            if annotationView == nil {
+                annotationView = MAAnnotationView.init(annotation: user, reuseIdentifier: AnnotationIden.ReuseIndetifier.user)
+            }
+            switch iden {
+            case AnnotationIden.PointType.start:
+                annotationView?.image = R.image.map_start_point()
+            case AnnotationIden.PointType.end:
+                annotationView?.image = R.image.map_end_point()
+            default:
+                return nil
+            }
+            annotationView?.canShowCallout = false
+            annotationView?.centerOffset = CGPoint(x: 0, y: -15)
+            return annotationView
+            
         }
         return nil
     }

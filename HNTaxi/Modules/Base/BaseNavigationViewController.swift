@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SVProgressHUD
 
 class BaseNavigationViewController: UINavigationController {
 
@@ -28,13 +29,30 @@ class BaseNavigationViewController: UINavigationController {
     func shareInit() {
         navigationBar.shadowImage = UIImage()
         navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        navigationBar.backIndicatorImage = R.image.icon_arrow_left()
-        navigationBar.backIndicatorTransitionMaskImage = R.image.icon_arrow_left()
+        navigationBar.backIndicatorImage = R.image.nav_back_icon()?.resizeToNavigationItem()
+        navigationBar.backIndicatorTransitionMaskImage = R.image.nav_back_icon()?.resizeToNavigationItem()
         navigationBar.tintColor = UIColor.darkGray
         navigationBar.barTintColor = UIColor.white
         navigationBar.isTranslucent = false
     }
 
+    override func pushViewController(_ viewController: UIViewController, animated: Bool) {
+        let backBarItem = UIBarButtonItem(image: UIImage(), style: .plain, target: nil, action: nil)
+        backBarItem.title = "."
+        backBarItem.width = 30
+        viewController.navigationItem.backBarButtonItem = backBarItem
+        if SVProgressHUD.isVisible() {
+            SVProgressHUD.dismiss()
+        }
+        super.pushViewController(viewController, animated: animated)
+    }
+    
+    
+    deinit {
+        if SVProgressHUD.isVisible() {
+            SVProgressHUD.dismiss()
+        }
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

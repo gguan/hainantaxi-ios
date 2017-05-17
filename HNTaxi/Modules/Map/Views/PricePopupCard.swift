@@ -28,9 +28,9 @@ class PricePopupCard: UIView {
     
     
     init() {
-        super.init(frame: CGRect.init(x: R.Margin.large,
+        super.init(frame: CGRect.init(x: R.Margin.large - 5,
                                       y: Layout.hideY,
-                                      width: R.Width.screen - R.Margin.large * 2,
+                                      width: R.Width.screen - R.Margin.large * 2 - 10,
                                       height: PricePopupCard.Layout.height))
         shareInit()
     }

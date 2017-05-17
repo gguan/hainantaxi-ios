@@ -50,7 +50,7 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
     
     static func searchPOIKeywords(city: String, keywords: String ) -> Observable<[HTLocation]> {
         guard !city.isEmpty && !keywords.isEmpty else {
-            return Observable<[HTLocation]>.just([])
+            return Observable<[HTLocation]>.error(NSError.build(desc: "Keyword is empty"))
         }
         let request = AMapPOIKeywordsSearchRequest()
         request.requireExtension = true
@@ -102,10 +102,10 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
                         let address = aResponse.regeocode?.addressComponent?.citycode
                         let cityCode = aResponse.regeocode?.addressComponent?.citycode
                         let location =  HTLocation(coordinate: coordinate, name: name, cityCode: cityCode, address: address)
-                        print("POI \( aResponse.regeocode?.pois?.first?.hnLocation.name ?? "")")
-                        print("Formate: \(aResponse.regeocode?.formattedAddress ?? "")")
-                        print("Name: \(name)")
-                        print(" ---------- ")
+//                        print("POI \( aResponse.regeocode?.pois?.first?.hnLocation.name ?? "")")
+//                        print("Formate: \(aResponse.regeocode?.formattedAddress ?? "")")
+//                        print("Name: \(name)")
+//                        print(" ---------- ")
                         anyObserver.on(.next(location))
                     }
                     anyObserver.on(.completed)

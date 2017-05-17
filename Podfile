@@ -35,6 +35,11 @@ def cacheframework
     pod 'KeychainAccess'
 end
 
+def smsframework
+    pod 'SMSSDK'
+    pod 'MOBFoundation_IDFA'
+end
+
 
 def mapframework
     pod 'AMapSearch'
@@ -45,6 +50,7 @@ target 'HNTaxi' do
     baseframework
     uiframework
     mapframework
+    smsframework
 end
 
 target 'HNTaxiKit' do

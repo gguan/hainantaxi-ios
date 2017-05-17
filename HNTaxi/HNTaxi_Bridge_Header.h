@@ -13,5 +13,8 @@
 #import <AMapSearchKit/AMapSearchKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
 
+#import <SMS_SDK/SMSSDK.h>
+#import <MOBFoundation/MOBFoundation.h>
+
 
 #endif /* HNTaxi_Bridge_Header_h */

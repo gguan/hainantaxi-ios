@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import HNTaxiKit
+import IQKeyboardManagerSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = MapViewController().embedInNavigation(BaseNavigationViewController.self)
         installVendor()
         setApperance()
+        _ = HTAuthManager.default.readCache()
         window?.makeKeyAndVisible()
         return true
     }
@@ -41,15 +44,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate {
     fileprivate func installVendor() {
+        SMSService.install()
         AMapServices.shared().apiKey = "be62598784b82e8a21bbb2ba77427a36"
+        IQKeyboardManager.sharedManager().enable = true
     }
     
     fileprivate func setApperance() {
         UIToolbar.appearance().tintColor = UIColor.darkGray
         UINavigationBar.appearance().shadowImage = UIImage()
         UINavigationBar.appearance().setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        UINavigationBar.appearance().backIndicatorImage = R.image.icon_arrow_left()
-        UINavigationBar.appearance().backIndicatorTransitionMaskImage = R.image.icon_arrow_left()
+        UINavigationBar.appearance().backIndicatorImage = R.image.nav_back_icon()
+        UINavigationBar.appearance().backIndicatorTransitionMaskImage = R.image.nav_back_icon()
         UINavigationBar.appearance().tintColor = UIColor.darkGray
         UITableViewCell.appearance().selectionStyle = .none
     }
