@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import HNTaxiKit
 
+
 extension Error {
     public var localizedDescription: String? {
         return (self as NSError).userInfo[NSLocalizedDescriptionKey] as? String
@@ -19,9 +20,28 @@ extension Error {
 
 extension NSError {
     public static func build(code: Int = -1, desc: String) -> NSError {
-        return NSError.init(domain: "com.play.wenovel", code: code, userInfo: [NSLocalizedDescriptionKey: desc])
+        return NSError.init(domain: "com.hainantaxi", code: code, userInfo: [NSLocalizedDescriptionKey: desc])
     }
 
+}
+
+
+extension String {
+    static func randomString(length: Int) -> String {
+        
+        let letters: NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let len = UInt32(letters.length)
+        
+        var randomString = ""
+        
+        for _ in 0..<length {
+            let rand = arc4random_uniform(len)
+            var nextChar = letters.character(at: Int(rand))
+            randomString += NSString(characters: &nextChar, length: 1) as String
+        }
+        
+        return randomString
+    }
 }
 
 

@@ -71,6 +71,20 @@ public struct HTRequest {
         }
     }
     
+    
+    public enum Common: RequestParameters {
+        case region(lat: Double, lng: Double, zoom: Int)
+        public func toRequestEntity() -> RequestEntity {
+            switch self {
+            case .region(let lat, let lng, let zoom):
+                return RequestEntity(GET: "region")
+                    .addQuerys(["lat": String(format: "%.6f", lat),
+                                "lng": String(format: "%.6f", lng),
+                                "zoomDepth": zoom])
+            }
+        }
+    }
+    
    
 }
 

@@ -10,6 +10,23 @@ import ObjectMapper
 import CoreLocation
 
 
+// MARK: enum
+public enum HTDriverState: String {
+    case offLine = "offLine"
+    case wait = "wait"
+    case inOrder = "inOrder"
+}
+
+
+public enum HTPathConsumerState: String {
+    case origin = "origin"
+    case confirmDestination = "confirmdestination"
+    case callTaxi = "calltaxi"
+    case onTaxi = "ontaxi"
+    case finishPay = "finishpay"
+}
+
+
 // MARK: Respone
 public struct HTAuthRespone: Mappable {
     public private(set) var expires: Date?
@@ -71,18 +88,34 @@ public struct HTPath: Mappable {
 }
 
 
-public enum HTDriverState: String {
-    case offLine = "offLine"
-    case wait = "wait"
-    case inOrder = "inOrder"
-}
 
 
-public enum HTPathConsumerState: String {
-    case origin = "origin"
-    case confirmDestination = "confirmdestination"
-    case callTaxi = "calltaxi"
-    case onTaxi = "ontaxi"
-    case finishPay = "finishpay"
+public struct HTRegion: Mappable, Equatable {
+    public private(set) var regionId: String?
+    public private(set) var distance: Double?
+    public private(set) var subRegions: [String]?
+    
+    public init?(map: Map) {
+    }
+    
+    public mutating func mapping(map: Map) {
+        regionId <- map["regionId"]
+        distance <- map["distance"]
+        subRegions <- map["subRegions"]
+    }
+    
+    public static func ==(lhs: HTRegion, rhs: HTRegion) -> Bool {
+        let a = (lhs.regionId ?? "") == (rhs.regionId ?? "")
+        guard a else { return false }
+        let l = lhs.subRegions ?? []
+        let r = rhs.subRegions ?? []
+        let b = l.count == r.count
+        guard b else { return false }
+        for e in l {
+            guard r.contains(e) else { return false }
+        }
+        return true
+    }
+
 }
 

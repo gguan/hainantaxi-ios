@@ -40,7 +40,7 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
   
-  /// This `R.image` struct is generated, and contains static references to 41 images.
+  /// This `R.image` struct is generated, and contains static references to 42 images.
   struct image {
     /// Image `bg_wite_card`.
     static let bg_wite_card = Rswift.ImageResource(bundle: R.hostingBundle, name: "bg_wite_card")
@@ -106,6 +106,8 @@ struct R: Rswift.Validatable {
     static let icon_to = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_to")
     /// Image `icon_user`.
     static let icon_user = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_user")
+    /// Image `map_car_point`.
+    static let map_car_point = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_car_point")
     /// Image `map_end_point`.
     static let map_end_point = Rswift.ImageResource(bundle: R.hostingBundle, name: "map_end_point")
     /// Image `map_mine_location`.
@@ -283,6 +285,11 @@ struct R: Rswift.Validatable {
     /// `UIImage(named: "icon_user", bundle: ..., traitCollection: ...)`
     static func icon_user(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.icon_user, compatibleWith: traitCollection)
+    }
+    
+    /// `UIImage(named: "map_car_point", bundle: ..., traitCollection: ...)`
+    static func map_car_point(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.map_car_point, compatibleWith: traitCollection)
     }
     
     /// `UIImage(named: "map_end_point", bundle: ..., traitCollection: ...)`

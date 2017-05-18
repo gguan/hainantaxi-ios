@@ -11,18 +11,19 @@ import HNTaxiKit
 import IQKeyboardManagerSwift
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class RiderAppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
     // MARK: Life Cycle
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = MapViewController().embedInNavigation(BaseNavigationViewController.self)
+        window?.rootViewController = MapRiderViewController().embedInNavigation(BaseNavigationViewController.self)
         installVendor()
         setApperance()
         _ = HTAuthManager.default.readCache()
         window?.makeKeyAndVisible()
+        MQTTService.shared.start()
         return true
     }
 
@@ -30,9 +31,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
+        LocationService.shared.updatingLocation()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
+        MQTTService.shared.start()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -42,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-extension AppDelegate {
+extension RiderAppDelegate {
     fileprivate func installVendor() {
         SMSService.install()
         AMapServices.shared().apiKey = "be62598784b82e8a21bbb2ba77427a36"

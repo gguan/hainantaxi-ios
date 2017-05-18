@@ -29,20 +29,23 @@ extension CLLocationCoordinate2D {
     }
 }
 
-
-
 extension AMapPOI {
     var hnLocation: HTLocation {
         return HTLocation(coordinate: location.cooridinate, name: name, cityCode: citycode, address: address)
     }
 }
 
+
 class MapSearchManager: NSObject,  AMapSearchDelegate {
     private let search = AMapSearchAPI()!
     private var mapTable = NSMapTable<AnyObject, AnyObject>(keyOptions: [.strongMemory], valueOptions: [.copyIn])
-    
+    private let networkQueue: OperationQueueScheduler
+
     public static let shared = MapSearchManager()
     private override init(){
+        let queue = OperationQueue()
+        queue.name = "com.network.mapSearchManager"
+        networkQueue =  OperationQueueScheduler(operationQueue: queue)
         super.init()
         search.delegate = self
     }
@@ -72,7 +75,9 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
                 }
             })
             return Disposables.create()
-        })
+            })
+            .subscribeOn(shared.networkQueue)
+            .observeOn(MainScheduler.asyncInstance)
     }
     
     
@@ -102,10 +107,6 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
                         let address = aResponse.regeocode?.addressComponent?.citycode
                         let cityCode = aResponse.regeocode?.addressComponent?.citycode
                         let location =  HTLocation(coordinate: coordinate, name: name, cityCode: cityCode, address: address)
-//                        print("POI \( aResponse.regeocode?.pois?.first?.hnLocation.name ?? "")")
-//                        print("Formate: \(aResponse.regeocode?.formattedAddress ?? "")")
-//                        print("Name: \(name)")
-//                        print(" ---------- ")
                         anyObserver.on(.next(location))
                     }
                     anyObserver.on(.completed)
@@ -114,7 +115,9 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
                 }
             })
             return Disposables.create()
-        })
+            })
+            .subscribeOn(shared.networkQueue)
+            .observeOn(MainScheduler.asyncInstance)
     }
     
     static func searchPathInfo(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D) -> Observable<HTPath> {
@@ -123,18 +126,6 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
         navi.origin = from.aMapGeoPoint
         navi.destination = to.aMapGeoPoint
         navi.strategy = 5
-        func stringToCoordinates( _ text: String) -> [CLLocationCoordinate2D] {
-            return text.components(separatedBy: ";")
-                .flatMap { (subText: String) -> CLLocationCoordinate2D? in
-                    let xy = subText.components(separatedBy: ",")
-                    guard xy.count == 2,
-                        let ystr = xy.last,
-                        let y = Double(ystr),
-                        let xstr = xy.first,
-                        let x = Double(xstr)  else { return nil }
-                    return CLLocationCoordinate2D(latitude: y, longitude: x)
-                }
-        }
         return Observable.create({ anyObserver -> Disposable in
             MapSearchManager.shared.searchForRequest(request: navi, completionBlock: {
                 (req: AMapSearchObject, res: AMapSearchObject?, error: NSError?) in
@@ -143,7 +134,7 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
                 } else if let route = (res as? AMapRouteSearchResponse)?.route, let path = route.paths?.first {
                     let points =  path.steps?.flatMap({ (step: AMapStep) -> [CLLocationCoordinate2D] in
                         guard let line = step.polyline else { return [] }
-                        return stringToCoordinates(line)
+                        return CLLocationCoordinate2D.decode(string: line)
                     })
                     let path = HTPath(distance: path.distance, duration: path.duration, tolls: Double(route.taxiCost), lineCoordinates: points)
                     anyObserver.on(.next(path))
@@ -153,7 +144,9 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
                 }
             })
             return Disposables.create()
-        })
+            })
+            .subscribeOn(shared.networkQueue)
+            .observeOn(MainScheduler.asyncInstance)
     }
     
     

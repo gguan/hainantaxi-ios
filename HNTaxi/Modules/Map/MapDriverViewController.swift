@@ -1,8 +1,8 @@
 //
-//  MapViewController.swift
+//  MapDriverViewController.swift
 //  HNTaxi
 //
-//  Created by Tbxark on 15/05/2017.
+//  Created by Tbxark on 18/05/2017.
 //  Copyright © 2017 Tbxark. All rights reserved.
 //
 
@@ -11,22 +11,32 @@ import HNTaxiKit
 import RxCocoa
 import RxSwift
 import SVProgressHUD
+import CocoaMQTT
 
-class MapViewController: UIViewController {
+class MapDriderViewController: UIViewController {
     // MAR: Flag
     fileprivate var isInitial = true
-    fileprivate var canShowPath = true
-    fileprivate var isShowCenterView: Bool {
-        get {
-            return !centerBubbleView.isHidden
-        }
-        set {
-            centerBubbleView.isHidden = !newValue
-            centerSelectPoint.isHidden = !newValue
+    fileprivate var canShowPath = false
+    fileprivate var didSelectLocation: Bool = false {
+        didSet {
+            if didSelectLocation {
+                centerBubbleView.isHidden = true
+                centerSelectPoint.isHidden = true
+            } else {
+                if !oldValue { return }
+                centerBubbleView.alpha = 0
+                centerSelectPoint.alpha = 0
+                centerBubbleView.isHidden = false
+                centerSelectPoint.isHidden = false
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.centerBubbleView.alpha = 1
+                    self.centerSelectPoint.alpha = 1
+                })
+            }
         }
     }
-    fileprivate var annotation: (start: MAPointAnnotation?, end: MAPointAnnotation?) = (nil, nil)
-
+    
+    
     // MARK: - Data
     fileprivate let disposeQueue = DisposeQueue()
     fileprivate let orderLocation = Variable<(from: Coordinate2D?, to: Coordinate2D?)>.init((from: nil, to: nil))
@@ -49,8 +59,6 @@ class MapViewController: UIViewController {
                     pathPolyline = line
                     mapView.add(pathPolyline)
                 }
-//                let test = path.lineCoordinates?.map({ c in "{log: \(c.longitude.description), lat: \(c.latitude.description)},"}).reduce("", +)
-//                print(test ?? "")
                 if let start = path.lineCoordinates?.first,
                     let end = path.lineCoordinates?.last {
                     let startPoint = MAPointAnnotation()
@@ -61,11 +69,10 @@ class MapViewController: UIViewController {
                     endPoint.coordinate = end
                     endPoint.title = AnnotationIden.PointType.end
                     mapView.addAnnotation(endPoint)
-                    annotation = (startPoint, endPoint)
+                    annotation = (startPoint, endPoint, nil)
                 }
-                isShowCenterView = false
+                
             } else {
-                isShowCenterView = true
                 if pricePopupCard.frame.origin.y.isEqual(to: PricePopupCard.Layout.showY) {
                     UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
                         self.pricePopupCard.frame.origin.y = PricePopupCard.Layout.hideY
@@ -85,6 +92,8 @@ class MapViewController: UIViewController {
     
     // MARK: - Map
     fileprivate var pathPolyline: MAPolyline?
+    fileprivate var carAnnotation = [String: MovingAnnotation]()
+    fileprivate var annotation: (start: MAPointAnnotation?, end: MAPointAnnotation?, driver: MovingAnnotation?) = (nil, nil, nil)
     fileprivate let mapView = MAMapView(frame: R.Rect.default).then {
         $0.showsCompass = false
         $0.isShowsIndoorMap = false
@@ -116,12 +125,11 @@ class MapViewController: UIViewController {
                                               style: .plain, target: nil, action: nil)
     
     fileprivate let backItem = UIBarButtonItem(image: R.image.icon_arrow_left()?.resizeToNavigationItem(),
-                                              style: .plain, target: nil, action: nil)
+                                               style: .plain, target: nil, action: nil)
     override func viewDidLoad() {
         super.viewDidLoad()
         layoutViewController()
         configureObservable()
-        DriverManagerService.shared.start()
         
     }
     
@@ -132,7 +140,7 @@ class MapViewController: UIViewController {
                 imgv.frame.size.width.isEqual(to: 55),
                 imgv.frame.size.height.isEqual(to: 13),
                 imgv.frame.origin.x.isEqual(to: 5) {
-                UIView.animate(withDuration: 1, animations: { 
+                UIView.animate(withDuration: 1, animations: {
                     imgv.alpha = 0
                 })
             }
@@ -178,9 +186,9 @@ class MapViewController: UIViewController {
         }
         
         locationSelectView.frame = CGRect(x: R.Margin.large - 5,
-                                      y: R.Margin.large,
-                                      width: R.Width.screen - R.Margin.large * 2 + 10,
-                                      height: 100)
+                                          y: R.Margin.large,
+                                          width: R.Width.screen - R.Margin.large * 2 + 10,
+                                          height: 100)
         
         let w = centerBubbleView.setText("在这打人")
         centerBubbleView.snp.updateConstraints { (make) in
@@ -192,6 +200,7 @@ class MapViewController: UIViewController {
     
     
     private func configureObservable() {
+        // 跳转至我的位置
         myLocationButton.rx.tap
             .subscribe(onNext: {[weak self] _ in
                 guard let `self` = self else { return }
@@ -200,6 +209,7 @@ class MapViewController: UIViewController {
             })
             .addDisposableTo(disposeQueue, key: "SwitchToMyLocation")
         
+        // 选择目的地
         locationSelectView.buttons.destination.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 guard let `self` = self else { return }
@@ -207,6 +217,7 @@ class MapViewController: UIViewController {
             })
             .addDisposableTo(disposeQueue, key: "destination")
         
+        // 用户信息按钮
         userItem.rx.tap
             .subscribe(onNext: {[weak self] _ in
                 guard let `self` = self else { return }
@@ -214,6 +225,7 @@ class MapViewController: UIViewController {
                 self.navigationController?.pushViewController(vc, animated: true)
             })
             .addDisposableTo(disposeQueue, key: "userItem")
+        // 取消目的地
         backItem.rx.tap
             .subscribe(onNext: {[weak self] _ in
                 guard let `self` = self else { return }
@@ -222,15 +234,34 @@ class MapViewController: UIViewController {
                 self.locationSelectView.buttons.destination.title = "选择目的地"
             })
             .addDisposableTo(disposeQueue, key: "backItem")
-    
+        
+        // 订单地址
         orderLocation.asObservable()
             .subscribe(onNext: {[weak self]  coordinate in
                 guard let `self` = self else { return }
+                self.didSelectLocation = coordinate.from != nil && coordinate.to != nil
                 self.changePriceStatus(coordinate: coordinate)
             })
             .addDisposableTo(disposeQueue, key: "orderLocation")
         
-    
+        // MQTT 订阅
+        MQTTService.subscriptTopic(name: MQTTTopic.myLocation)
+            .subscribe(onNext: {[weak self] (msg: CocoaMQTTMessage) in
+                guard let `self` = self else { return }
+                guard let content = msg.string,
+                    let coor = CLLocationCoordinate2D(string: content) else { return }
+                let driver = self.annotation.driver ?? MovingAnnotation()
+                if self.annotation.driver == nil {
+                    self.annotation.driver = driver
+                    driver.coordinate = coor
+                    self.mapView.addAnnotation(driver)
+                } else {
+                    var coors = [coor]
+                    driver.addMoveAnimation(withKeyCoordinates: &coors, count: UInt(coors.count), withDuration: 0.1, withName: nil, completeCallback: nil)
+                }
+            })
+            .addDisposableTo(disposeQueue, key: "location")
+        
     }
     
     
@@ -245,9 +276,9 @@ class MapViewController: UIViewController {
                 guard let `self` = self else { return }
                 self.travelPath = path
                 SVProgressHUD.dismiss()
-            }, onError: { (error: Error) in
-                SVProgressHUD.showError(withStatus: error.localizedDescription ?? "Error")
-                print(error)
+                }, onError: { (error: Error) in
+                    SVProgressHUD.showError(withStatus: error.localizedDescription ?? "Error")
+                    print(error)
             })
             .addDisposableTo(disposeQueue, key: "ReuqestPath")
     }
@@ -261,17 +292,17 @@ class MapViewController: UIViewController {
         vc.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         vc.delegate = self
         self.present(vc, animated: true, completion: nil)
-
+        
     }
     
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 }
 
 
-extension MapViewController: MapSearchViewControllerDelegate {
+extension MapDriderViewController: MapSearchViewControllerDelegate {
     func mapSearchViewController(didDismiss vc: MapSearchViewController) {
         self.locationSelectView.frame.origin.y = R.Margin.large
     }
@@ -281,37 +312,26 @@ extension MapViewController: MapSearchViewControllerDelegate {
         orderLocation.value.to = data.coordinate
     }
 }
+ 
 
-
-
-private struct AnnotationIden {
-    struct ReuseIndetifier {
-        static let user =  "UserLocationReuseIndetifier"
-    }
-    struct PointType {
-        static let start = "start"
-        static let end   = "end"
-    }
-}
-
-extension MapViewController: MAMapViewDelegate {
+extension MapDriderViewController: MAMapViewDelegate {
     
     func mapView(_ mapView: MAMapView!, mapDidMoveByUser wasUserAction: Bool) {
-        if orderLocation.value.to != nil && orderLocation.value.from != nil { return }
+        if didSelectLocation { return }
         orderLocation.value.from = mapView.centerCoordinate
         MapSearchManager.searchReGeocode(coordinate:  mapView.centerCoordinate)
             .subscribeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: {[weak self] (location: HTLocation) in
                 guard let `self` = self else { return }
                 self.locationSelectView.buttons.from.title = location.name
-            }, onError: { (error: Error) in
-                print(error)
+                }, onError: { (error: Error) in
+                    print(error)
             })
             .addDisposableTo(disposeQueue, key: "ReGeocode")
         if let point =  mapView?.centerCoordinate {
             DriverManagerService.shared.updateSelectLocation(point)
         }
-
+        
     }
     func mapView(_ mapView: MAMapView!, didUpdate userLocation: MAUserLocation!, updatingLocation: Bool) {
         if isInitial, let loc = userLocation?.coordinate {
@@ -337,7 +357,7 @@ extension MapViewController: MAMapViewDelegate {
         if let user = annotation as? MAPointAnnotation, let iden = user.title {
             var annotationView: MAAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: AnnotationIden.ReuseIndetifier.user)
             if annotationView == nil {
-                annotationView = MAAnnotationView.init(annotation: user, reuseIdentifier: AnnotationIden.ReuseIndetifier.user)
+                annotationView = MAAnnotationView(annotation: user, reuseIdentifier: AnnotationIden.ReuseIndetifier.user)
             }
             switch iden {
             case AnnotationIden.PointType.start:
@@ -351,6 +371,14 @@ extension MapViewController: MAMapViewDelegate {
             annotationView?.centerOffset = CGPoint(x: 0, y: -15)
             return annotationView
             
+        } else if let car = annotation as? MovingAnnotation {
+            var annotationView: MAAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: AnnotationIden.ReuseIndetifier.car)
+            if annotationView == nil {
+                annotationView = MAAnnotationView(annotation: car, reuseIdentifier: AnnotationIden.ReuseIndetifier.car)
+            }
+            annotationView?.image = R.image.map_car_point()
+            annotationView?.canShowCallout = false
+            return annotationView
         }
         return nil
     }

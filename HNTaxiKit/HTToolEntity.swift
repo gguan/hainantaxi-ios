@@ -22,6 +22,19 @@ extension String {
 }
 
 
+enum UserRole: String {
+    case driver = "driver"
+    case rider = "rider"
+    var isDriver: Bool {
+        return self == .driver
+    }
+    
+    var isRider: Bool {
+        return self == .rider
+    }
+}
+
+
 class HTDateTransform: TransformType {
     
     typealias Object = Date
@@ -65,10 +78,39 @@ class LocationCoordinate2DTransform: TransformType {
     }
 }
 
+class ZipLocationCoordinate2DTransform: TransformType {
+    typealias Object = [CLLocationCoordinate2D]
+    typealias JSON = String
+    
+    init() {}
+    
+    func transformFromJSON(_ value: Any?) -> Object? {
+        guard let v = value, let str = v as? String else { return nil }
+        return str.components(separatedBy: ";").flatMap({ (text) -> CLLocationCoordinate2D? in
+            let xy = text.components(separatedBy: ",")
+            guard xy.count == 2,
+                let ystr = xy.last,
+                let y = Double(ystr),
+                let xstr = xy.first,
+                let x = Double(xstr)  else { return nil }
+            return CLLocationCoordinate2D.init(latitude: y, longitude: x)
+        })
+    }
+    
+    func transformToJSON(_ value: Object?) -> JSON? {
+        guard let v = value else { return nil }
+        return v.reduce("", { (text: String, point: CLLocationCoordinate2D) -> String in
+            return "\(text);\(point.longitude),\(point.latitude))"
+        })
+    }
+}
+
+
 public struct Transform {
     static let date = HTDateTransform()
     static let url = URLTransform()
     static let coordinate = LocationCoordinate2DTransform()
+    static let zipCoordinate = ZipLocationCoordinate2DTransform()
 }
 
 
