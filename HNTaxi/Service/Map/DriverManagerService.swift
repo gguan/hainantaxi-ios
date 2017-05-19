@@ -22,7 +22,7 @@ class DriverManagerService {
     }
         
     func updateSelectLocation(_ point: Coordinate2D) {
-        MQTTService.publish(topic: MQTTTopic.myLocation, message: point.zipString)
+        MQTTService.publish(topic: MQTTTopic.riderLocation, message: point.zipString)
     }
 }
 

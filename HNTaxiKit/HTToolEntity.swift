@@ -58,13 +58,13 @@ class HTDateTransform: TransformType {
 }
 
 
-class LocationCoordinate2DTransform: TransformType {
-    typealias Object = CLLocationCoordinate2D
-    typealias JSON = [String: Double]
+public class LocationCoordinate2DTransform: TransformType {
+    public typealias Object = CLLocationCoordinate2D
+    public typealias JSON = [String: Double]
     
     init() {}
     
-    func transformFromJSON(_ value: Any?) -> Object? {
+    public func transformFromJSON(_ value: Any?) -> Object? {
         let map = JsonMapper(value)
         let lat = map["lat"].doubleValue
         let log = map["log"].doubleValue
@@ -72,35 +72,41 @@ class LocationCoordinate2DTransform: TransformType {
         return CLLocationCoordinate2D(latitude: y, longitude: x)
     }
     
-    func transformToJSON(_ value: Object?) -> JSON? {
+    public func transformToJSON(_ value: Object?) -> JSON? {
         guard let v = value else { return nil }
         return ["lat": v.latitude, "log": v.longitude]
     }
 }
 
-class ZipLocationCoordinate2DTransform: TransformType {
-    typealias Object = [CLLocationCoordinate2D]
-    typealias JSON = String
-    
+
+public class StandardCoordinateTransform: TransformType {
+    public typealias Object = CLLocationCoordinate2D
+    public typealias JSON = [Double]
     init() {}
-    
-    func transformFromJSON(_ value: Any?) -> Object? {
-        guard let v = value, let str = v as? String else { return nil }
-        return str.components(separatedBy: ";").flatMap({ (text) -> CLLocationCoordinate2D? in
-            let xy = text.components(separatedBy: ",")
-            guard xy.count == 2,
-                let ystr = xy.last,
-                let y = Double(ystr),
-                let xstr = xy.first,
-                let x = Double(xstr)  else { return nil }
-            return CLLocationCoordinate2D.init(latitude: y, longitude: x)
+    public func transformFromJSON(_ value: Any?) -> Object? {
+        guard let v = value, let latlng = v as? JSON, latlng.count == 2 else { return nil }
+        return CLLocationCoordinate2D(latitude: latlng[0], longitude: latlng[1])
+    }
+    public func transformToJSON(_ value: Object?) -> JSON? {
+        return value.map({ [$0.latitude, $0.longitude] })
+    }
+}
+
+
+public class StandardCoordinateArrayTransform: TransformType {
+    public typealias Object = [CLLocationCoordinate2D]
+    public typealias JSON = [[Double]]
+    init() {}
+    public func transformFromJSON(_ value: Any?) -> Object? {
+        guard let v = value, let array = v as? JSON else { return nil }
+        return array.flatMap({ (latlng: [Double]) -> CLLocationCoordinate2D? in
+            guard latlng.count == 2 else { return  nil }
+            return CLLocationCoordinate2D(latitude: latlng[0], longitude: latlng[1])
         })
     }
-    
-    func transformToJSON(_ value: Object?) -> JSON? {
-        guard let v = value else { return nil }
-        return v.reduce("", { (text: String, point: CLLocationCoordinate2D) -> String in
-            return "\(text);\(point.longitude),\(point.latitude))"
+    public func transformToJSON(_ value: Object?) -> JSON? {
+        return value?.map({ (p: CLLocationCoordinate2D) -> [Double] in
+            return [p.latitude, p.longitude]
         })
     }
 }
@@ -108,9 +114,10 @@ class ZipLocationCoordinate2DTransform: TransformType {
 
 public struct Transform {
     static let date = HTDateTransform()
-    static let url = URLTransform()
-    static let coordinate = LocationCoordinate2DTransform()
-    static let zipCoordinate = ZipLocationCoordinate2DTransform()
+    public static let url = URLTransform()
+    public static let coordinate = LocationCoordinate2DTransform()
+    public static let standardCoordinate = StandardCoordinateTransform()
+    public static let standardCoordinateArray = StandardCoordinateArrayTransform()
 }
 
 

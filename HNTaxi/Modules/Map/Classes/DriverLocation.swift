@@ -11,8 +11,8 @@ import HNTaxiKit
 class DriverLocation {
     public private(set) var data: MQTTDriverLocation
     public private(set) var lastUpdateTime: Date
-    public var isExpire: Bool {
-        return lastUpdateTime.timeIntervalSinceNow < 60
+    public var isVaild: Bool {
+        return lastUpdateTime.timeIntervalSinceNow > -5
     }
     init(_ location: MQTTDriverLocation) {
         data = location

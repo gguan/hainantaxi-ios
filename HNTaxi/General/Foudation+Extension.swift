@@ -11,6 +11,18 @@ import RxSwift
 import HNTaxiKit
 
 
+
+extension Optional {
+    func isEmpty() -> Bool {
+        switch self {
+        case .none:
+            return true
+        default:
+            return false
+        }
+    }
+}
+
 extension Error {
     public var localizedDescription: String? {
         return (self as NSError).userInfo[NSLocalizedDescriptionKey] as? String

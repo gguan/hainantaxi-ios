@@ -13,9 +13,10 @@
 		6A02626A1ECD8A2100E576AB /* MovingAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0262691ECD8A2100E576AB /* MovingAnnotation.swift */; };
 		6A02626E1ECD991500E576AB /* MapDriverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A02626D1ECD991500E576AB /* MapDriverViewController.swift */; };
 		6A0262721ECDA67100E576AB /* DriveAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0262711ECDA67100E576AB /* DriveAppDelegate.swift */; };
-		6A0262751ECDA87E00E576AB /* MapDriverViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0262741ECDA87E00E576AB /* MapDriverViewModel.swift */; };
+		6A0262751ECDA87E00E576AB /* MapRiderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0262741ECDA87E00E576AB /* MapRiderViewModel.swift */; };
 		6A0262771ECDA9AF00E576AB /* MapElementRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0262761ECDA9AF00E576AB /* MapElementRender.swift */; };
 		6A0262791ECDB08300E576AB /* DriverLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0262781ECDB08300E576AB /* DriverLocation.swift */; };
+		6A3A7E6D1ECEA4C10034F08A /* MapDriverViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3A7E6C1ECEA4C10034F08A /* MapDriverViewModel.swift */; };
 		6A5836D01EC9BB640035EF01 /* TextBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5836CF1EC9BB640035EF01 /* TextBubbleView.swift */; };
 		6A5836D21EC9C81F0035EF01 /* DisposeQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5836D11EC9C81F0035EF01 /* DisposeQueue.swift */; };
 		6A63FD4A1ECC3FA100F3C54F /* SMSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A63FD491ECC3FA100F3C54F /* SMSService.swift */; };
@@ -129,10 +130,11 @@
 		6A0262691ECD8A2100E576AB /* MovingAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovingAnnotation.swift; sourceTree = "<group>"; };
 		6A02626D1ECD991500E576AB /* MapDriverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDriverViewController.swift; sourceTree = "<group>"; };
 		6A0262711ECDA67100E576AB /* DriveAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriveAppDelegate.swift; sourceTree = "<group>"; };
-		6A0262741ECDA87E00E576AB /* MapDriverViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDriverViewModel.swift; sourceTree = "<group>"; };
+		6A0262741ECDA87E00E576AB /* MapRiderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapRiderViewModel.swift; sourceTree = "<group>"; };
 		6A0262761ECDA9AF00E576AB /* MapElementRender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapElementRender.swift; sourceTree = "<group>"; };
 		6A0262781ECDB08300E576AB /* DriverLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverLocation.swift; sourceTree = "<group>"; };
 		6A3494538BC4229360698B4D /* Pods-CacheService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CacheService.release.xcconfig"; path = "Pods/Target Support Files/Pods-CacheService/Pods-CacheService.release.xcconfig"; sourceTree = "<group>"; };
+		6A3A7E6C1ECEA4C10034F08A /* MapDriverViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDriverViewModel.swift; sourceTree = "<group>"; };
 		6A5836CF1EC9BB640035EF01 /* TextBubbleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextBubbleView.swift; sourceTree = "<group>"; };
 		6A5836D11EC9C81F0035EF01 /* DisposeQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisposeQueue.swift; sourceTree = "<group>"; };
 		6A63FD491ECC3FA100F3C54F /* SMSService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSService.swift; sourceTree = "<group>"; };
@@ -253,9 +255,17 @@
 		6A0262731ECDA87400E576AB /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				6A0262741ECDA87E00E576AB /* MapDriverViewModel.swift */,
+				6A0262741ECDA87E00E576AB /* MapRiderViewModel.swift */,
+				6A3A7E6C1ECEA4C10034F08A /* MapDriverViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		6A3A7E6F1ECEFA450034F08A /* CityList */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CityList;
 			sourceTree = "<group>";
 		};
 		6A63FD4B1ECC532600F3C54F /* User */ = {
@@ -425,6 +435,7 @@
 		6AF8D9A41EC9809300F9D951 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				6A3A7E6F1ECEFA450034F08A /* CityList */,
 				6A0262731ECDA87400E576AB /* ViewModel */,
 				6AF8D9A51EC980A300F9D951 /* Classes */,
 				6AF8D9A61EC980A300F9D951 /* Views */,
@@ -921,7 +932,7 @@
 				6AF8D9C01EC98B8900F9D951 /* Layout.swift in Sources */,
 				6AF8D9C11EC98B8900F9D951 /* OptionalVariable.swift in Sources */,
 				6A02626A1ECD8A2100E576AB /* MovingAnnotation.swift in Sources */,
-				6A0262751ECDA87E00E576AB /* MapDriverViewModel.swift in Sources */,
+				6A0262751ECDA87E00E576AB /* MapRiderViewModel.swift in Sources */,
 				6AF8D9DE1EC9AC3100F9D951 /* SeparatedLineTableViewCell.swift in Sources */,
 				6AF8D9971EC96A6100F9D951 /* RiderAppDelegate.swift in Sources */,
 				6A5836D21EC9C81F0035EF01 /* DisposeQueue.swift in Sources */,
@@ -935,6 +946,7 @@
 				6AF8D9C61EC98B8900F9D951 /* ValidationService.swift in Sources */,
 				6AF8D9BE1EC98B8900F9D951 /* ContainerViewModelProtocol.swift in Sources */,
 				6A0262771ECDA9AF00E576AB /* MapElementRender.swift in Sources */,
+				6A3A7E6D1ECEA4C10034F08A /* MapDriverViewModel.swift in Sources */,
 				6AF8D9C51EC98B8900F9D951 /* UIKit+Extension.swift in Sources */,
 				6A0262681ECD79E500E576AB /* LocationService.swift in Sources */,
 				6AB32A961ECAFDD500096187 /* PricePopupCard.swift in Sources */,

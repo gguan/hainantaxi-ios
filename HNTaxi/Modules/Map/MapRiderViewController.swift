@@ -26,8 +26,9 @@ class MapRiderViewController: UIViewController {
     fileprivate var isInitial = true
     
     // MARK: - ViewModel
-    fileprivate let viewModel = MapDriverViewModel()
+    fileprivate let viewModel = MapRiderViewModel()
     fileprivate let disposeQueue = DisposeQueue()
+    fileprivate let cache = LocationRecoder(id: "test")
 
     // MARK: - Map
     fileprivate var pathPolyline: MAPolyline?
@@ -182,12 +183,47 @@ class MapRiderViewController: UIViewController {
             })
             .addDisposableTo(disposeQueue, key: "travelPath")
         
+        // 订单状态
         viewModel.orderLocation.asObservable()
             .map({ !$0.isVaild })
             .subscribe(onNext: {[weak self] (isShow) in
                 self?.changeCenterDisplayStatus(isShow: isShow)
             })
             .addDisposableTo(disposeQueue, key: "orderLocation")
+        
+        // 附近司机位置
+        viewModel.drivers.asObservable()
+            .subscribe(onNext: {[weak self] (drivers: [DriverLocation]) in
+                guard let `self` = self else { return }
+                let current = drivers.flatMap({ $0.data.id })
+                var currentAnnotations = self.carAnnotation
+                var removeAnnotations = [MovingAnnotation]()
+                var activeAnnotations = [String: MovingAnnotation]()
+                for k in currentAnnotations.keys {
+                    guard let an = self.carAnnotation[k] else { continue }
+                    if !current.contains(k) {
+                        removeAnnotations.append(an)
+                        currentAnnotations.removeValue(forKey: k)
+                    } else {
+                        activeAnnotations[k] = an
+                    }
+                }
+                let activeKeys = activeAnnotations.keys
+                self.mapView.removeAnnotations(removeAnnotations)
+                for d in drivers {
+                    guard let id = d.data.id else { return }
+                    if activeKeys.contains(id) {
+                        guard let an = activeAnnotations[id], let p = d.data.locations else { continue }
+                        var loc = [p]
+                        an.addMoveAnimation(withKeyCoordinates: &loc, count: 1, withDuration: 2, withName: nil, completeCallback: nil)
+                    } else if let an = MapElementRender.driverPoint(coordinate: d.data.locations, iden: id) {
+                        currentAnnotations[id] = an
+                        self.mapView.addAnnotation(an)
+                    }
+                }
+                self.carAnnotation = currentAnnotations
+            })
+            .addDisposableTo(disposeQueue, key: "driverLocation")
         
     }
     
@@ -209,6 +245,16 @@ class MapRiderViewController: UIViewController {
     }
     
     private func changeDisplayPath(travelPath: HTPath?,  showPloy: Bool = false ){
+        func removeOldAnnotation() {
+            if let start = annotation.start  {
+                mapView.removeAnnotation(start)
+                annotation.start = nil
+            }
+            if let end = annotation.end {
+                mapView.removeAnnotation(end)
+                annotation.end = nil
+            }
+        }
         if let line = pathPolyline {
             pathPolyline = nil
             mapView.remove(line)
@@ -226,6 +272,7 @@ class MapRiderViewController: UIViewController {
                 pathPolyline = line
                 mapView.add(pathPolyline)
             }
+            removeOldAnnotation()
             if let start = path.lineCoordinates?.first,
                 let end = path.lineCoordinates?.last {
                 let startPoint = MAPointAnnotation()
@@ -236,6 +283,7 @@ class MapRiderViewController: UIViewController {
                 endPoint.coordinate = end
                 endPoint.title = AnnotationIden.PointType.end
                 mapView.addAnnotation(endPoint)
+                mapView.showAnnotations([startPoint, endPoint], animated: true)
                 annotation = (startPoint, endPoint, nil)
             }
             
@@ -245,14 +293,7 @@ class MapRiderViewController: UIViewController {
                     self.pricePopupCard.frame.origin.y = PricePopupCard.Layout.hideY
                 }, completion: nil)
             }
-            if let start = annotation.start  {
-                mapView.removeAnnotation(start)
-                annotation.start = nil
-            }
-            if let end = annotation.end {
-                mapView.removeAnnotation(end)
-                annotation.end = nil
-            }
+            removeOldAnnotation()
         }
     }
     
@@ -291,6 +332,7 @@ extension MapRiderViewController: MAMapViewDelegate {
     func mapView(_ mapView: MAMapView!, mapDidMoveByUser wasUserAction: Bool) {
         if viewModel.didSelectStartAndEndLocation { return }
         viewModel.currentPosition.value = mapView.centerCoordinate
+        cache.currentLocation.value = mapView.centerCoordinate
         MapSearchManager.searchReGeocode(coordinate:  mapView.centerCoordinate)
             .subscribeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: {[weak self] (location: HTLocation) in

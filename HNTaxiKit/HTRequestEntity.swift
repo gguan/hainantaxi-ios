@@ -12,14 +12,12 @@ import CoreLocation
 
 public struct MQTTDriverLocation: Mappable {
     public private(set) var id: String?
-    public private(set) var type: String?
-    public private(set) var locations: [CLLocationCoordinate2D]?
+    public private(set) var locations: CLLocationCoordinate2D?
     
-    init?(id: String?, type: String?, location: [CLLocationCoordinate2D]?) {
-        guard let i = id, let t = type else { return nil }
+    public init?(id: String?,location: CLLocationCoordinate2D?) {
+        guard let i = id else { return nil }
         self.id = i
-        self.type = t
-        self.locations = locations ?? [CLLocationCoordinate2D]()
+        self.locations = location
     }
     
     public init?(map: Map) {
@@ -27,7 +25,6 @@ public struct MQTTDriverLocation: Mappable {
     
     public mutating func mapping(map: Map) {
         id <- map["id"]
-        type <- map["type"]
-        locations <- (map["locations"], Transform.zipCoordinate)
+        locations <- (map["position"], Transform.standardCoordinate)
     }
 }

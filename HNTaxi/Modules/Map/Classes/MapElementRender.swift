@@ -39,12 +39,11 @@ struct MapElementRender {
         return endPoint
     }
     
-    static func driverPoint(coordinate: CLLocationCoordinate2D?, iden: String?, type: String?) -> MovingAnnotation? {
-        guard let c = coordinate, let i = iden, let t = type else { return nil }
+    static func driverPoint(coordinate: CLLocationCoordinate2D?, iden: String?) -> MovingAnnotation? {
+        guard let c = coordinate, let i = iden else { return nil }
         let point = MovingAnnotation()
         point.coordinate = c
         point.title = i
-        point.subtitle = t
         return point
     }
     

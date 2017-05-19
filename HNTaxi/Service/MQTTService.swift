@@ -10,30 +10,36 @@ import RxSwift
 import RxCocoa
 import CocoaMQTT
 
-
+//region-14-13493-11824
 
 typealias MQTTMessage = CocoaMQTTMessage
 
 enum MQTTTopic {
-    case myLocation
-    case driverLocation(regionId: String)
+    case riderLocation
+    case driverLocation
+    case driverRegion(regionId: String)
+    
     func toString() -> String {
         switch self {
-        case .myLocation:
-            return "location"
-        case .driverLocation(let regionId):
-            return "drivers/location/\(regionId)"
+        case .driverLocation:
+            return "driver/location"
+        case .riderLocation:
+            return "rider/location"
+        case .driverRegion(let regionId):
+            return "region/\(regionId)/driver"
         }
     }
 }
 
 class MQTTService: NSObject {
     static let shared = MQTTService()
-    fileprivate var mqtt: CocoaMQTT?
     var reconnectWhenError = true
-    fileprivate var subscriptList = [String: [PublishSubject<MQTTMessage>]]()
+    
+    fileprivate var mqtt: CocoaMQTT?
+    fileprivate var subscriptList = [String: PublishSubject<MQTTMessage>]()
     fileprivate var didSubscript = [String]()
     fileprivate var id: String = "iOS-\(String.randomString(length: 10))"
+   
     private override init() {}
     func start() {
         if let m = mqtt {
@@ -77,13 +83,11 @@ class MQTTService: NSObject {
     
     private func subscriptTopic(name: String) -> Observable<MQTTMessage> {
         if let m = mqtt, m.connState == .connected {
-            mqtt?.subscribe(name)
+            mqtt?.subscribe(name, qos: .qos2)
         }
-        let signal = PublishSubject<MQTTMessage>()
-        var data = subscriptList[name] ?? [PublishSubject<MQTTMessage>]()
-        data.append(signal)
+        let data = subscriptList[name] ?? PublishSubject<MQTTMessage>()
         subscriptList[name] = data
-        return signal.asObservable()
+        return data.asObservable()
     }
     
     private func publish(topic: String, message: String) {
@@ -92,6 +96,7 @@ class MQTTService: NSObject {
     
     private func unsubscriptTopic(name: String) {
         _ = mqtt?.unsubscribe(name)
+        subscriptList[name]?.onCompleted()
         subscriptList.removeValue(forKey: name)
     }
 }
@@ -120,14 +125,12 @@ extension MQTTService: CocoaMQTTDelegate {
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16 ) {
-        print("Receive \(message.topic): \(message.string ?? "")")
-        subscriptList[message.topic]?.forEach({ (subject: PublishSubject<MQTTMessage>) in
-            subject.on(.next(message))
-        })
+//        print("Receive \(message.topic): \(message.string ?? "")")
+        subscriptList[message.topic]?.on(.next(message))
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopic topic: String) {
-        print("Subscribe: \(topic)")
+//        print("Subscribe: \(topic)")
         didSubscript.append(topic)
     }
     

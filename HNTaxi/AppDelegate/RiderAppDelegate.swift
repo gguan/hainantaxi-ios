@@ -18,6 +18,7 @@ class RiderAppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: Life Cycle
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
+//        window?.rootViewController = MapDriderViewController().embedInNavigation(BaseNavigationViewController.self)
         window?.rootViewController = MapRiderViewController().embedInNavigation(BaseNavigationViewController.self)
         installVendor()
         setApperance()
