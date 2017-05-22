@@ -119,3 +119,13 @@ public struct HTRegion: Mappable, Equatable {
 
 }
 
+
+public enum HTRequestOrderResult {
+    case recived
+    case searching
+    case fail(msg: String)
+    case driver(msg: String)
+    case location(msg: MQTTDriverLocation)
+    case finish
+}
+

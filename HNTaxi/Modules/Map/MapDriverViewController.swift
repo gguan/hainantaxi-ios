@@ -112,7 +112,7 @@ class MapDriderViewController: UIViewController {
 extension MapDriderViewController: MAMapViewDelegate {
     func mapView(_ mapView: MAMapView!, mapDidMoveByUser wasUserAction: Bool) {
         // TODO: TEST
-        let p = mapView.centerCoordinate
+//        let p = mapView.centerCoordinate
 //        print("[\(p.latitude),\(p.longitude)],")
         viewModel.currentPosition.value = mapView.centerCoordinate
     }

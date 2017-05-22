@@ -9,6 +9,8 @@
 import Foundation
 import CoreLocation
 import RxSwift
+import HNTaxiKit
+ 
 
 class LocationService: NSObject, CLLocationManagerDelegate {
     static let shared = LocationService()
@@ -16,74 +18,113 @@ class LocationService: NSObject, CLLocationManagerDelegate {
     static var location: Observable<Coordinate2D> {
         return shared.location.asObservable()
     }
-    private var manager = CLLocationManager()
-    private var currentStatus: Bool?
+    private var manager = CoreLocationManager.shared
+    private let bgTask = BackgroundTaskManager.shared
     private let location = PublishSubject<Coordinate2D>()
+    
+    
+    private var timer: Timer?
+    private var stopTimer: Timer?
+    
     private override init() {
         super.init()
         manager.delegate = self
-        configureLocationManager()
-    }
-    
-    private func configureLocationManager() {
-        if let s = currentStatus, s == false {
-            return
-        }
         if CLLocationManager.authorizationStatus() == .notDetermined {
-            currentStatus = false
             manager.requestAlwaysAuthorization()
-            self.configManager()
+            manager.startUpdatingLocation()
         } else if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
             if CLLocationManager.authorizationStatus() == .notDetermined {
-                manager.requestWhenInUseAuthorization()
-                currentStatus = false
-                self.configManager()
+                manager.requestAlwaysAuthorization()
+                manager.startUpdatingLocation()
             }
         }
-        self.configManager()
-    }
-    
-    private func configManager() {
-        manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyBest
-        manager.distanceFilter = 100.0
-        updatingLocation()
-        
-    }
-    
-    func updatingLocation() {
         manager.startUpdatingLocation()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(LocationService.applicationEnterBackground),
+                                               name: NSNotification.Name.UIApplicationDidEnterBackground,
+                                               object: nil)
+    }
+    
+    
+
+    @objc private func applicationEnterBackground() {
+        manager.requestAndStartUpdatingLocation()
+        _ = bgTask.beginNewBackgroundTask()
+    }
+    
+    
+    @objc private func restartLocationUpdates() {
+        timer?.invalidate()
+        timer = nil
+        manager.requestAndStartUpdatingLocation()
+    }
+    
+    
+    
+    func beginLocationTracking() -> Bool {
+        
+        guard CLLocationManager.locationServicesEnabled() else { return false }
+        switch CLLocationManager.authorizationStatus() {
+        case .denied, .restricted:
+            return false
+        default:
+            manager.startUpdatingLocation()
+            return true
+        }
+    }
+    
+    
+    func stopLocationTracking() {
+        manager.stopUpdatingLocation()
+    
+    }
+    
+    
+    func updateLocationToServer() {
+    
+    
+    }
+
+    // MARK: - CLLocationManagerDelegate
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let coor = MQTTDriverLocation(id: "test", location: locations.first?.coordinate)?.toJSONString() else { return }
+        _ = MQTTService.publish(topic: MQTTTopic.riderLocation, message: coor)
+        
+        guard UIApplication.shared.applicationState == .background else { return }
+        if timer != nil { return }
+        _ = bgTask.beginNewBackgroundTask()
+        timer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(LocationService.restartLocationUpdates), userInfo: nil, repeats: false)
+        stopTimer?.invalidate()
+        stopTimer = nil
+        timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(LocationService.stopLocationTracking), userInfo: nil, repeats: false)
+    }
+
+}
+ 
+ 
+class CoreLocationManager: CLLocationManager {
+    static let shared = CoreLocationManager()
+    private override init() {
+        super.init()
+        desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        if #available(iOS 9.0, *) {
+            allowsBackgroundLocationUpdates = true
+        }
+        pausesLocationUpdatesAutomatically = false
+        distanceFilter = kCLDistanceFilterNone
+        requestAndStartUpdatingLocation()
         
     }
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let coordinate = manager.location?.coordinate else { return }
-        location.on(.next(coordinate))
+    func requestAndStartUpdatingLocation() {
+        requestAlwaysAuthorization()
+        startUpdatingLocation()
     }
+    
 }
+
  
-class CoordinateBuffer {
-    private(set) var container = Array<CLLocationCoordinate2D>()
-    private let maxSize: Int
-    init(size: UInt) {
-        maxSize = Int(size)
-    }
-    func append(_ point: CLLocationCoordinate2D) -> Bool {
-        if container.count <  maxSize {
-            container.append(point)
-            return true
-        } else {
-            return false
-        }
-    }
-    func encode(cleanBuffer: Bool = true) -> String {
-        let str = CLLocationCoordinate2D.encode(points: container)
-        if cleanBuffer {
-            container.removeAll()
-        }
-        return str
-    }
-}
+
  
 extension CLLocationCoordinate2D {
     

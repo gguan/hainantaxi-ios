@@ -85,6 +85,22 @@ public struct HTRequest {
         }
     }
     
+    
+    
+    public struct Rider {
+        public enum Order: RequestParameters {
+            case request(order: HTReuqestOrder)
+            public func toRequestEntity() -> RequestEntity {
+                switch self {
+                case .request(let order):
+                    return RequestEntity(POST: "order").addMapBody(order)
+                }
+            }
+        }
+    
+    
+    }
+    
    
 }
 

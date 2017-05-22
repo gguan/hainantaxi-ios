@@ -178,6 +178,7 @@ class MapRiderViewController: UIViewController {
     
         // 订单地址
         viewModel.travelPath.asObservable()
+            .observeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: {[weak self] (travelPath: HTPath?) in
                 self?.changeDisplayPath(travelPath: travelPath)
             })
@@ -186,6 +187,7 @@ class MapRiderViewController: UIViewController {
         // 订单状态
         viewModel.orderLocation.asObservable()
             .map({ !$0.isVaild })
+            .observeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: {[weak self] (isShow) in
                 self?.changeCenterDisplayStatus(isShow: isShow)
             })
@@ -193,6 +195,7 @@ class MapRiderViewController: UIViewController {
         
         // 附近司机位置
         viewModel.drivers.asObservable()
+            .observeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: {[weak self] (drivers: [DriverLocation]) in
                 guard let `self` = self else { return }
                 let current = drivers.flatMap({ $0.data.id })

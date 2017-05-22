@@ -14,26 +14,34 @@ import IQKeyboardManagerSwift
 class RiderAppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var locationUpdateTimer: Timer?
+//    let locationTracker = 
 
     // MARK: Life Cycle
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-//        window?.rootViewController = MapDriderViewController().embedInNavigation(BaseNavigationViewController.self)
         window?.rootViewController = MapRiderViewController().embedInNavigation(BaseNavigationViewController.self)
         installVendor()
         setApperance()
         _ = HTAuthManager.default.readCache()
         window?.makeKeyAndVisible()
         MQTTService.shared.start()
+        _ = LocationService.shared.beginLocationTracking()
+        if let _ = launchOptions?[.location] {
+            MQTTService.shared.start()
+            CoreLocationManager.shared.requestAlwaysAuthorization()
+            if #available(iOS 9.0, *) {
+                CoreLocationManager.shared.allowsBackgroundLocationUpdates = true
+            }
+            CoreLocationManager.shared.startMonitoringSignificantLocationChanges()
+        }
+        _ = BackgroundTaskHelper.checkPermission()
         return true
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
     }
 
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        LocationService.shared.updatingLocation()
-    }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         MQTTService.shared.start()
@@ -47,6 +55,7 @@ class RiderAppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension RiderAppDelegate {
+        
     fileprivate func installVendor() {
         SMSService.install()
         AMapServices.shared().apiKey = "be62598784b82e8a21bbb2ba77427a36"

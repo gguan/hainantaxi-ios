@@ -16,6 +16,9 @@
 		6A0262751ECDA87E00E576AB /* MapRiderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0262741ECDA87E00E576AB /* MapRiderViewModel.swift */; };
 		6A0262771ECDA9AF00E576AB /* MapElementRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0262761ECDA9AF00E576AB /* MapElementRender.swift */; };
 		6A0262791ECDB08300E576AB /* DriverLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0262781ECDB08300E576AB /* DriverLocation.swift */; };
+		6A15F9181ED28BB4002739FA /* BackgroundTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A15F9171ED28BB4002739FA /* BackgroundTaskManager.swift */; };
+		6A15F91D1ED2CFB9002739FA /* OrderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A15F91C1ED2CFB9002739FA /* OrderService.swift */; };
+		6A15F9221ED2ED8C002739FA /* BaseStyleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A15F9211ED2ED8C002739FA /* BaseStyleTableViewCell.swift */; };
 		6A3A7E6D1ECEA4C10034F08A /* MapDriverViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3A7E6C1ECEA4C10034F08A /* MapDriverViewModel.swift */; };
 		6A5836D01EC9BB640035EF01 /* TextBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5836CF1EC9BB640035EF01 /* TextBubbleView.swift */; };
 		6A5836D21EC9C81F0035EF01 /* DisposeQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5836D11EC9C81F0035EF01 /* DisposeQueue.swift */; };
@@ -133,6 +136,9 @@
 		6A0262741ECDA87E00E576AB /* MapRiderViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapRiderViewModel.swift; sourceTree = "<group>"; };
 		6A0262761ECDA9AF00E576AB /* MapElementRender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapElementRender.swift; sourceTree = "<group>"; };
 		6A0262781ECDB08300E576AB /* DriverLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverLocation.swift; sourceTree = "<group>"; };
+		6A15F9171ED28BB4002739FA /* BackgroundTaskManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundTaskManager.swift; sourceTree = "<group>"; };
+		6A15F91C1ED2CFB9002739FA /* OrderService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderService.swift; sourceTree = "<group>"; };
+		6A15F9211ED2ED8C002739FA /* BaseStyleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseStyleTableViewCell.swift; sourceTree = "<group>"; };
 		6A3494538BC4229360698B4D /* Pods-CacheService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CacheService.release.xcconfig"; path = "Pods/Target Support Files/Pods-CacheService/Pods-CacheService.release.xcconfig"; sourceTree = "<group>"; };
 		6A3A7E6C1ECEA4C10034F08A /* MapDriverViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapDriverViewModel.swift; sourceTree = "<group>"; };
 		6A5836CF1EC9BB640035EF01 /* TextBubbleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextBubbleView.swift; sourceTree = "<group>"; };
@@ -259,6 +265,52 @@
 				6A3A7E6C1ECEA4C10034F08A /* MapDriverViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		6A15F9191ED2CF88002739FA /* Oder */ = {
+			isa = PBXGroup;
+			children = (
+				6A15F91A1ED2CF88002739FA /* Classes */,
+				6A15F91B1ED2CF88002739FA /* Views */,
+			);
+			path = Oder;
+			sourceTree = "<group>";
+		};
+		6A15F91A1ED2CF88002739FA /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		6A15F91B1ED2CF88002739FA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6A15F91E1ED2EC64002739FA /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				6A15F91F1ED2EC64002739FA /* Classes */,
+				6A15F9201ED2EC64002739FA /* Views */,
+			);
+			path = Message;
+			sourceTree = "<group>";
+		};
+		6A15F91F1ED2EC64002739FA /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		6A15F9201ED2EC64002739FA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		6A3A7E6F1ECEFA450034F08A /* CityList */ = {
@@ -405,6 +457,8 @@
 		6AF8D98E1EC96A6100F9D951 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				6A15F91E1ED2EC64002739FA /* Message */,
+				6A15F9191ED2CF88002739FA /* Oder */,
 				6A63FD4B1ECC532600F3C54F /* User */,
 				6AB32A971ECC283D00096187 /* Auth */,
 				6AF8D9A41EC9809300F9D951 /* Map */,
@@ -476,6 +530,8 @@
 				6A63FD491ECC3FA100F3C54F /* SMSService.swift */,
 				6A0262641ECD596000E576AB /* MQTTService.swift */,
 				6A0262671ECD79E500E576AB /* LocationService.swift */,
+				6A15F91C1ED2CFB9002739FA /* OrderService.swift */,
+				6A15F9171ED28BB4002739FA /* BackgroundTaskManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -524,6 +580,7 @@
 				6AF8D9D81EC9AC3100F9D951 /* QuickButton.swift */,
 				6AF8D9D91EC9AC3100F9D951 /* RxScrollViewRefresh.swift */,
 				6AF8D9DA1EC9AC3100F9D951 /* SeparatedLineTableViewCell.swift */,
+				6A15F9211ED2ED8C002739FA /* BaseStyleTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -921,6 +978,7 @@
 				6AF8D9C21EC98B8900F9D951 /* R.generated.swift in Sources */,
 				6AF8D9E21EC9B04200F9D951 /* BaseNavigationViewController.swift in Sources */,
 				6A5836D01EC9BB640035EF01 /* TextBubbleView.swift in Sources */,
+				6A15F91D1ED2CFB9002739FA /* OrderService.swift in Sources */,
 				6A0262791ECDB08300E576AB /* DriverLocation.swift in Sources */,
 				6AF8D9981EC96A6100F9D951 /* ViewController.swift in Sources */,
 				6AF8D9C31EC98B8900F9D951 /* Reusable.swift in Sources */,
@@ -941,10 +999,12 @@
 				6A0262721ECDA67100E576AB /* DriveAppDelegate.swift in Sources */,
 				6AF8D9DD1EC9AC3100F9D951 /* RxScrollViewRefresh.swift in Sources */,
 				6A63FD4A1ECC3FA100F3C54F /* SMSService.swift in Sources */,
+				6A15F9181ED28BB4002739FA /* BackgroundTaskManager.swift in Sources */,
 				6AF8D9DB1EC9AC3100F9D951 /* BarButton.swift in Sources */,
 				6AF8D9DC1EC9AC3100F9D951 /* QuickButton.swift in Sources */,
 				6AF8D9C61EC98B8900F9D951 /* ValidationService.swift in Sources */,
 				6AF8D9BE1EC98B8900F9D951 /* ContainerViewModelProtocol.swift in Sources */,
+				6A15F9221ED2ED8C002739FA /* BaseStyleTableViewCell.swift in Sources */,
 				6A0262771ECDA9AF00E576AB /* MapElementRender.swift in Sources */,
 				6A3A7E6D1ECEA4C10034F08A /* MapDriverViewModel.swift in Sources */,
 				6AF8D9C51EC98B8900F9D951 /* UIKit+Extension.swift in Sources */,

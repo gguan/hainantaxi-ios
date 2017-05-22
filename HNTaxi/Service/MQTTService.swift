@@ -13,14 +13,18 @@ import CocoaMQTT
 //region-14-13493-11824
 
 typealias MQTTMessage = CocoaMQTTMessage
+typealias MQTTMsgId = UInt16
 
 enum MQTTTopic {
+    case riderOrder(order: String)
     case riderLocation
     case driverLocation
     case driverRegion(regionId: String)
     
     func toString() -> String {
         switch self {
+        case .riderOrder(let id):
+            return "rider/order/\(id)"
         case .driverLocation:
             return "driver/location"
         case .riderLocation:
@@ -30,6 +34,8 @@ enum MQTTTopic {
         }
     }
 }
+
+
 
 class MQTTService: NSObject {
     static let shared = MQTTService()
@@ -69,16 +75,16 @@ class MQTTService: NSObject {
         mqtt = nil
     }
     
-    static func publish(topic: MQTTTopic, message: String)  {
-        shared.publish(topic: topic.toString(), message: message)
+    static func publish(topic: MQTTTopic, message: String) -> MQTTMsgId?  {
+        return shared.publish(topic: topic.toString(), message: message)
     }
     
     static func subscriptTopic(name: MQTTTopic) -> Observable<MQTTMessage> {
         return shared.subscriptTopic(name: name.toString())
     }
     
-    static func unsubscriptTopic(name: MQTTTopic) {
-        shared.unsubscriptTopic(name: name.toString())
+    static func unsubscriptTopic(name: MQTTTopic) -> MQTTMsgId? {
+        return shared.unsubscriptTopic(name: name.toString())
     }
     
     private func subscriptTopic(name: String) -> Observable<MQTTMessage> {
@@ -90,14 +96,14 @@ class MQTTService: NSObject {
         return data.asObservable()
     }
     
-    private func publish(topic: String, message: String) {
-        mqtt?.publish(topic, withString: message, qos: CocoaMQTTQOS.qos1)
+    private func publish(topic: String, message: String) -> MQTTMsgId? {
+        return mqtt?.publish(topic, withString: message, qos: CocoaMQTTQOS.qos1)
     }
     
-    private func unsubscriptTopic(name: String) {
-        _ = mqtt?.unsubscribe(name)
+    private func unsubscriptTopic(name: String) -> MQTTMsgId? {
         subscriptList[name]?.onCompleted()
         subscriptList.removeValue(forKey: name)
+        return mqtt?.unsubscribe(name)
     }
 }
 
@@ -118,7 +124,7 @@ extension MQTTService: CocoaMQTTDelegate {
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: UInt16) {
-//        print("Pubsh \(message.topic): \(message.string ?? "")")
+        print("Pubsh \(message.topic): \(message.string ?? "")")
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: UInt16) {
