@@ -26,7 +26,6 @@ def uiframework
     pod 'IQKeyboardManagerSwift'
     pod 'SnapKit'
     pod 'MJRefresh'
-    pod 'AMap3DMap'
     pod 'SwiftMessages'
 end
 
@@ -42,7 +41,9 @@ end
 
 
 def mapframework
+    pod 'AMap3DMap'
     pod 'AMapSearch'
+    pod 'AMapNavi'
 end
 
 target 'HNTaxi' do

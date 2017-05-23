@@ -51,7 +51,7 @@ class MapRiderViewModel {
                     return Observable.just(nil)
                 }
                 self?.orderLocation.value.from = point
-                let para = HTRequest.Common.region(lat: p.latitude, lng: p.longitude, zoom: 14)
+                let para = HTRequest.Map.region(lat: p.latitude, lng: p.longitude, zoom: 14)
                 let req: Observable<HTRegion> = HTNetworking.modelNetRequest(para)
                     .do(onNext: { print($0) }, onError: { print($0)})
                 return req.map({ Optional($0) }).catchErrorJustReturn(nil)
@@ -60,8 +60,6 @@ class MapRiderViewModel {
                 self?.region = newRegion
             })
             .addDisposableTo(disposeQueue, key: "CurrentPosition")
-        
-
         
         orderLocation.asObservable().flatMap { (location: OrderSelectLocation) -> Observable<HTPath?> in
                 guard let f = location.from, let t = location.to else {
@@ -79,10 +77,11 @@ class MapRiderViewModel {
 
         var observers = [Observable<MQTTMessage>]()
         for i in region {
-            let sig = MQTTService.subscriptTopic(name: MQTTTopic.driverRegion(regionId: i))
+            let sig = MQTTService.subscriptTopic(name: MQTTRiderTopic.regionDrivers(regionId: i))
             observers.append(sig)
         }
         let mapper = Mapper<MQTTDriverLocation>()
+      
         Observable.merge(observers).flatMap { (msg: CocoaMQTTMessage) -> Observable<MQTTDriverLocation?> in
                 guard let json = msg.string else { return Observable.just(nil) }
                 let model = mapper.map(JSONString: json)
@@ -116,7 +115,7 @@ class MapRiderViewModel {
     
     func unsubscribe(region: [String]) {
         region.forEach { (id: String) in
-            MQTTService.unsubscriptTopic(name: MQTTTopic.driverRegion(regionId: id))
+            _ = MQTTService.unsubscriptTopic(name: MQTTRiderTopic.regionDrivers(regionId: id))
         }
     }
     

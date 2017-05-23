@@ -68,7 +68,7 @@ class MapDriverViewModel {
                 guard  let p = points else { return }
                 let model = MQTTDriverLocation(id: "test", location: p)
                 guard let json = model?.toJSONString() else { return }
-                MQTTService.publish(topic: MQTTTopic.driverRegion(regionId: "13-2234-5740"), message: json)
+                _ = MQTTService.publish(topic: MQTTDriverTopic.driverLocation, message: json)
             })
             .addDisposableTo(disposeBag)
         

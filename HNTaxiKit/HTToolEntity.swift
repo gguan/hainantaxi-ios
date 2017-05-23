@@ -111,6 +111,84 @@ public class StandardCoordinateArrayTransform: TransformType {
     }
 }
 
+/*
+ // 已收到请求
+ case received
+ // 正在搜索司机
+ case searching
+ // 接单失败(msg: 失败信息)
+ case requestFail(err: Error?)
+ // 接单成功(msg: 司机信息)
+ case requestSuccess(driverId: String?)
+ // 等待车辆到达(location: 司机位置)
+ case waitDriver(latlng: CLLocationCoordinate2D?)
+ // 已上车
+ case boarded
+ // 车辆行驶信息(location: 司机位置)
+ case driving(latlng: CLLocationCoordinate2D?)
+ // 已下车
+ case getOff
+ // 支付状态(bool: 成功/失败, msg: 信息)
+ case pay(status: Bool, err: Error?)
+ // 已取消
+ case cancle
+ */
+
+public class HTOrderStatusTransform: TransformType {
+    public typealias Object = HTOrderStatus
+    public typealias JSON = [String: String]
+
+    init()  {}
+    public func transformFromJSON(_ value: Any?) -> HTOrderStatus? {
+        let map = JsonMapper(value)
+        guard let status = map["status"].stringValue else { return HTOrderStatus.none }
+        switch status {
+            case "received": return HTOrderStatus.received
+            case "searching" : return HTOrderStatus.searching
+            case "requestFail": return HTOrderStatus.requestFail(err: nil)
+            case "requestSuccess": return HTOrderStatus.requestSuccess(driverId: nil)
+            case "waitDriver": return HTOrderStatus.waitDriver(latlng: nil)
+            case "boarded": return HTOrderStatus.boarded
+            case "driving": return HTOrderStatus.driving(latlng: nil)
+            case "getOff": return HTOrderStatus.getOff
+            case "pay": return HTOrderStatus.pay(status: true, err: nil)
+            case "cancle": return HTOrderStatus.cancle
+            default: return HTOrderStatus.none
+        }
+    }
+    
+    public func transformToJSON(_ value: HTOrderStatus?) -> [String : String]? {
+        var json = [String : String]()
+        guard let v = value else { return json }
+        switch v {
+        case .received:
+            json["status"] = "received"
+        case .searching:
+            json["status"] = "searching"
+        case .requestFail(let err):
+            json["status"] = "requestFail"
+        case .requestSuccess(let driverId):
+            json["status"] = "requestSuccess"
+        case .waitDriver(let latlng):
+            json["status"] = "waitDriver"
+        case .boarded:
+            json["status"] = "boarded"
+        case .driving(let latlng):
+            json["status"] = "driving"
+        case .getOff:
+            json["status"] = "getOff"
+        case .pay(let status, let err):
+            json["status"] = "pay"
+        case .cancle:
+            json["status"] = "cancle"
+        default:
+            return json
+        }
+        return json
+    }
+
+}
+
 
 public struct Transform {
     static let date = HTDateTransform()
@@ -118,6 +196,8 @@ public struct Transform {
     public static let coordinate = LocationCoordinate2DTransform()
     public static let standardCoordinate = StandardCoordinateTransform()
     public static let standardCoordinateArray = StandardCoordinateArrayTransform()
+    public static let carType = EnumTransform<HTCarType>()
+    public static let orderStatus = HTOrderStatusTransform()
 }
 
 

@@ -166,6 +166,14 @@ class MapRiderViewController: UIViewController {
             })
             .addDisposableTo(disposeQueue, key: "userItem")
         
+        msgItem.rx.tap
+            .subscribe(onNext: {[weak self] _ in
+                guard let `self` = self else { return }
+                let vc = MessageViewController()
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
+            .addDisposableTo(disposeQueue, key: "msgItem")
+        
         // 取消目的地
         backItem.rx.tap
             .subscribe(onNext: {[weak self] _ in
@@ -286,7 +294,7 @@ class MapRiderViewController: UIViewController {
                 endPoint.coordinate = end
                 endPoint.title = AnnotationIden.PointType.end
                 mapView.addAnnotation(endPoint)
-                mapView.showAnnotations([startPoint, endPoint], animated: true)
+                mapView.showAnnotations([startPoint, endPoint], edgePadding: UIEdgeInsets(top: 500, left: 100, bottom: 500, right: 100), animated: true)
                 annotation = (startPoint, endPoint, nil)
             }
             
@@ -345,12 +353,6 @@ extension MapRiderViewController: MAMapViewDelegate {
                 print(error)
             })
             .addDisposableTo(disposeQueue, key: "ReGeocode")
-        
-        
-        if let point =  mapView?.centerCoordinate {
-            DriverManagerService.shared.updateSelectLocation(point)
-        }
-
     }
     func mapView(_ mapView: MAMapView!, didUpdate userLocation: MAUserLocation!, updatingLocation: Bool) {
         if isInitial, let loc = userLocation?.coordinate {

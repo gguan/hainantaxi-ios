@@ -31,7 +31,6 @@ public struct MQTTTokenContainer: Mappable {
 
 }
 
-
 public struct MQTTDriverLocation: Mappable {
     public private(set) var id: String?
     public private(set) var timestamp: Date?
@@ -56,21 +55,26 @@ public struct MQTTDriverLocation: Mappable {
 
 
 
-
 public struct HTReuqestOrder: Mappable {
-    public private(set) var startLocation: CLLocationCoordinate2D?
-    public private(set) var endLocation: CLLocationCoordinate2D?
+    public var carType: HTCarType = .common
+    public private(set) var from: CLLocationCoordinate2D?
+    public private(set) var to: CLLocationCoordinate2D?
     
     public init?(map: Map) {
     }
     
-    init(startLocation: CLLocationCoordinate2D?,
-         endLocation:  CLLocationCoordinate2D? ) {
-        self.startLocation = startLocation
-        self.endLocation = endLocation
+    public init(from: CLLocationCoordinate2D?,
+         to:  CLLocationCoordinate2D?,
+         carType: HTCarType = .common ) {
+        self.from = from
+        self.to = to
+        self.carType = carType
     }
 
     public mutating func mapping(map: Map) {
+        carType <- (map["carType"], Transform.carType)
+        from  <- (map["from"], Transform.standardCoordinate)
+        to  <- (map["to"], Transform.standardCoordinate)
     }
 
 }

@@ -11,20 +11,59 @@ import CoreLocation
 
 
 // MARK: enum
-public enum HTDriverState: String {
-    case offLine = "offLine"
-    case wait = "wait"
-    case inOrder = "inOrder"
-}
 
 
-public enum HTPathConsumerState: String {
+
+public enum HTRiderStatus: String {
     case origin = "origin"
     case confirmDestination = "confirmdestination"
     case callTaxi = "calltaxi"
     case onTaxi = "ontaxi"
     case finishPay = "finishpay"
 }
+
+
+public enum HTDriverStatus: String {
+    case know = ""
+    case rest = "rest"
+    case work = "work"
+    case ordering = "ording"
+}
+
+public enum HTOrderStatus {
+    // 未开始
+    case none
+    // 已收到请求
+    case received
+    // 正在搜索司机
+    case searching
+    // 接单失败(msg: 失败信息)
+    case requestFail(err: Error?)
+    // 接单成功(msg: 司机信息)
+    case requestSuccess(driverId: String?)
+    // 等待车辆到达(location: 司机位置)
+    case waitDriver(latlng: CLLocationCoordinate2D?)
+    // 已上车
+    case boarded
+    // 车辆行驶信息(location: 司机位置)
+    case driving(latlng: CLLocationCoordinate2D?)
+    // 已下车
+    case getOff
+    // 支付状态(bool: 成功/失败, msg: 信息)
+    case pay(status: Bool, err: Error?)
+    // 已取消
+    case cancle
+}
+
+
+
+
+
+
+public enum HTCarType: String {
+    case common = "common"
+}
+
 
 
 // MARK: Respone
@@ -116,16 +155,26 @@ public struct HTRegion: Mappable, Equatable {
         }
         return true
     }
-
 }
 
 
-public enum HTRequestOrderResult {
-    case recived
-    case searching
-    case fail(msg: String)
-    case driver(msg: String)
-    case location(msg: MQTTDriverLocation)
-    case finish
+public struct HTComment: Mappable {
+    public init?(map: Map) {
+    }
+    public mutating func mapping(map: Map) {
+    }
 }
+
+
+
+
+public struct HTOrder: Mappable {
+    public private(set) var id: String?
+    public init?(map: Map) {
+    }
+    public mutating func mapping(map: Map) {
+        id <- map["id"]
+    }
+}
+
 

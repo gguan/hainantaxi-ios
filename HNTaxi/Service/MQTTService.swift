@@ -15,22 +15,53 @@ import CocoaMQTT
 typealias MQTTMessage = CocoaMQTTMessage
 typealias MQTTMsgId = UInt16
 
-enum MQTTTopic {
-    case riderOrder(order: String)
-    case riderLocation
-    case driverLocation
-    case driverRegion(regionId: String)
+
+
+protocol MQTTTopicProtocol {
+    func toString() -> String
+}
+
+enum MQTTRiderTopic: MQTTTopicProtocol {
+    
+    // Subscript: 区域内司机的位置
+    case regionDrivers(regionId: String)
+    // Subscript: 订单状态
+    case orderStatus(orderId: String)
+
     
     func toString() -> String {
         switch self {
-        case .riderOrder(let id):
+        case .regionDrivers(let regionId):
+            return "region/\(regionId)/driver"
+        case .orderStatus(let id):
             return "rider/order/\(id)"
+
+        }
+    }
+}
+
+
+enum MQTTDriverTopic: MQTTTopicProtocol {
+    
+    // Publish: 司机位置 message 中带有 id
+    case driverLocation
+    // Subscript: 订单状态
+    case orderStatus(orderId: String)
+    // Publish: 司机状态
+    case driverStatus
+    // Subscript: 等待订单
+    case waitOrder(driverId: String)
+    
+    func toString() -> String {
+        switch self {
         case .driverLocation:
             return "driver/location"
-        case .riderLocation:
-            return "rider/location"
-        case .driverRegion(let regionId):
-            return "region/\(regionId)/driver"
+        case .orderStatus(let id):
+            return "rider/order/\(id)"
+        case .driverStatus:
+            return "driver/status"
+        case .waitOrder(let id):
+            return "driver/\(id)/waitorder"
         }
     }
 }
@@ -53,7 +84,7 @@ class MQTTService: NSObject {
                 m.connect()
             }
         } else {
-            mqtt = CocoaMQTT(clientID: id, host: "45.63.126.236", port: 1883)
+            mqtt = CocoaMQTT(clientID: id, host: "hn.tbxark.site", port: 1883)
             mqtt?.username = ""
             mqtt?.password = ""
             mqtt?.willMessage = CocoaMQTTWill(topic: "/will", message: "dieout")
@@ -75,15 +106,15 @@ class MQTTService: NSObject {
         mqtt = nil
     }
     
-    static func publish(topic: MQTTTopic, message: String) -> MQTTMsgId?  {
+    static func publish(topic: MQTTTopicProtocol, message: String) -> MQTTMsgId?  {
         return shared.publish(topic: topic.toString(), message: message)
     }
     
-    static func subscriptTopic(name: MQTTTopic) -> Observable<MQTTMessage> {
+    static func subscriptTopic(name: MQTTTopicProtocol) -> Observable<MQTTMessage> {
         return shared.subscriptTopic(name: name.toString())
     }
     
-    static func unsubscriptTopic(name: MQTTTopic) -> MQTTMsgId? {
+    static func unsubscriptTopic(name: MQTTTopicProtocol) -> MQTTMsgId? {
         return shared.unsubscriptTopic(name: name.toString())
     }
     
@@ -110,7 +141,7 @@ class MQTTService: NSObject {
 
 extension MQTTService: CocoaMQTTDelegate {
     func mqtt(_ mqtt: CocoaMQTT, didConnect host: String, port: Int) {
-        print("Connect: \(host) \(port)")
+//        print("Connect: \(host) \(port)")
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck) {
@@ -124,7 +155,7 @@ extension MQTTService: CocoaMQTTDelegate {
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: UInt16) {
-        print("Pubsh \(message.topic): \(message.string ?? "")")
+//        print("Pubsh \(message.topic): \(message.string ?? "")")
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: UInt16) {

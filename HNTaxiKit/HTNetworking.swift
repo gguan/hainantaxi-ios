@@ -72,10 +72,12 @@ public struct HTRequest {
     }
     
     
-    public enum Common: RequestParameters {
+    public enum Map: RequestParameters {
+        
         case region(lat: Double, lng: Double, zoom: Int)
         public func toRequestEntity() -> RequestEntity {
             switch self {
+                
             case .region(let lat, let lng, let zoom):
                 return RequestEntity(GET: "region")
                     .addQuerys(["lat": String(format: "%.6f", lat),
@@ -87,18 +89,67 @@ public struct HTRequest {
     
     
     
+    
+    
     public struct Rider {
         public enum Order: RequestParameters {
-            case request(order: HTReuqestOrder)
+            // 状态
+            case status(status: HTDriverStatus)
+            // 最近的订单
+            case latest
+            // 预览订单
+            case preOrder(req: HTReuqestOrder)
+            // 确认订单
+            case reqOrder(req: HTReuqestOrder)
+            // 取消订单
+            case cancle(orderId: String)
+            
             public func toRequestEntity() -> RequestEntity {
                 switch self {
-                case .request(let order):
-                    return RequestEntity(POST: "order").addMapBody(order)
+                case .latest:
+                    return RequestEntity(GET: "order/latest")
+                case .preOrder(let req):
+                    return RequestEntity(POST: "order/preview")
+                        .addMapBody(req)
+                case .reqOrder(let req):
+                    return RequestEntity(POST: "order/request")
+                        .addMapBody(req)
+                case .cancle(let id):
+                    return RequestEntity(POST: "order/\(id)")
+                case .status(let status):
+                    return RequestEntity(POST: "driver/status")
+                        .addDictBody(["status": status.rawValue])
                 }
             }
         }
+    }
     
-    
+    public struct Driver {
+        public enum Order: RequestParameters {
+            // 最近的订单
+            case latest
+            // 确认接单
+            case getOrder(orderId: String)
+            // 变更司机状态
+            case changeStatus(status: HTDriverStatus)
+            // 变更订单状态
+            case changeorderStatus(orderId: String, status: String)
+            
+            public func toRequestEntity() -> RequestEntity {
+                switch self {
+                case .latest:
+                    return RequestEntity(GET: "order/latest")
+                case .getOrder(let id):
+                    return RequestEntity(GET: "order/\(id)")
+                case .changeStatus(let status):
+                    return RequestEntity(POST: "driver/status")
+                        .addDictBody(["status": status.rawValue])
+                case .changeorderStatus(let id, let status):
+                    return RequestEntity(POST: "order/\(id)/status")
+                        .addDictBody(["status": status])
+                }
+            }
+        }
     }
     
    

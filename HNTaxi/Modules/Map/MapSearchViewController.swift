@@ -83,6 +83,13 @@ class MapSearchViewController: UIViewController {
                 self?.seachPOI(city: city, keyword: keyword ?? city)
             })
             .addDisposableTo(disposeQueue, key: "SearchChange")
+        
+        searchBar.cityButton.rx.tap.asObservable()
+            .subscribe(onNext: {[weak self] _ in
+                let vc = CityListViewController().embedInNavigation(BaseNavigationViewController.self)
+                self?.present(vc, animated: true, completion: nil)
+            })
+            .addDisposableTo(disposeQueue, key: "cityButton")
     }
     
     

@@ -8,41 +8,41 @@
 
 import UIKit
 
-struct JsonMapper {
+public struct JsonMapper {
     
     private var originData: Any?
     
-    var boolValue: Bool? {
+    public var boolValue: Bool? {
         return originData as? Bool ?? numValue?.boolValue
     }
     
-    var stringValue: String? {
+    public var stringValue: String? {
         return originData as? String
     }
     
-    var numValue: NSNumber? {
+    public var numValue: NSNumber? {
         return originData as? NSNumber
     }
     
-    var CGFloatValue: CGFloat? {
+    public var CGFloatValue: CGFloat? {
         return originData as? CGFloat
     }
     
     
-    init(_ data: Any?) {
+    public init(_ data: Any?) {
         self.originData = data
     }
     
     
-    func value<T>() -> T? {
+    public func value<T>() -> T? {
         return originData as? T
     }
     
-    subscript(key: String) -> JsonMapper {
+    public subscript(key: String) -> JsonMapper {
         return JsonMapper((originData as? [String: Any])?[key])
     }
     
-    subscript(index: Int) -> JsonMapper {
+    public subscript(index: Int) -> JsonMapper {
         guard let array = originData as? [Any],
             index < array.count else {
                 return JsonMapper(nil)
@@ -50,59 +50,66 @@ struct JsonMapper {
         return JsonMapper(array[index])
     }
     
+    public static func convertStringToDictionary(text: String?) -> Any? {
+        guard let str = text else { return nil }
+        guard let data = str.data(using: String.Encoding.utf8) else { return nil }
+        let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+        return json
+    }
+    
 }
 
 
 extension JsonMapper {
     
-    var int8Value: Int8? {
+    public var int8Value: Int8? {
         return numValue?.int8Value
     }
     
-    var uint8Value: UInt8? {
+    public var uint8Value: UInt8? {
         return numValue?.uint8Value
     }
     
-    var int16Value: Int16? {
+    public var int16Value: Int16? {
         return numValue?.int16Value
     }
     
-    var uint16Value: UInt16? {
+    public var uint16Value: UInt16? {
         return numValue?.uint16Value
     }
     
-    var int32Value: Int32? {
+    public var int32Value: Int32? {
         return numValue?.int32Value
     }
     
-    var uint32Value: UInt32? {
+    public var uint32Value: UInt32? {
         return numValue?.uint32Value
     }
     
     
-    var int64Value: Int64? {
+    public var int64Value: Int64? {
         return numValue?.int64Value
     }
     
-    var uint64Value: UInt64? {
+    public var uint64Value: UInt64? {
         return numValue?.uint64Value
     }
     
-    var floatValue: Float? {
+    public var floatValue: Float? {
         return numValue?.floatValue
     }
     
-    var doubleValue: Double? {
+    public var doubleValue: Double? {
         return numValue?.doubleValue
     }
     
     @available(OSX 10.5, *)
-    var intValue: Int? {
+    public var intValue: Int? {
         return numValue?.intValue
     }
     
     @available(OSX 10.5, *)
-    var uintValue: UInt? {
+    public var uintValue: UInt? {
         return numValue?.uintValue
     }
     

@@ -22,7 +22,7 @@ class BaseTitleTableViewCell: UITableViewCell, Reusable {
     }
     
     private func shareInit() {
-        titleLabel.font = UIFont.systemFont(ofSize: 15)
+        titleLabel.font = UIFont.systemFont(ofSize: 12)
         titleLabel.numberOfLines = 0
         titleLabel.textColor = Color.textBlack
         let arrow = R.image.icon_arrow_right()
@@ -44,7 +44,7 @@ class BaseTitleTableViewCell: UITableViewCell, Reusable {
     
     func configureWithDataModel(title: String, isLogoutStyle: Bool = false) {
         titleLabel.text = title
-        titleLabel.textColor = isLogoutStyle ? Color.orange : Color.textBlack
+        titleLabel.textColor = isLogoutStyle ? Color.red : Color.textDarkGray
         titleLabel.textAlignment = isLogoutStyle ? .center : .left
     }
 }

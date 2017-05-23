@@ -88,7 +88,7 @@ class LocationService: NSObject, CLLocationManagerDelegate {
     // MARK: - CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let coor = MQTTDriverLocation(id: "test", location: locations.first?.coordinate)?.toJSONString() else { return }
-        _ = MQTTService.publish(topic: MQTTTopic.riderLocation, message: coor)
+//        _ = MQTTService.publish(topic: MQTTTopic.riderLocation, message: coor)
         
         guard UIApplication.shared.applicationState == .background else { return }
         if timer != nil { return }

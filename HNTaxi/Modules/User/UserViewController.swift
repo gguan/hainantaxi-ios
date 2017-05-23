@@ -22,18 +22,18 @@ class UserViewController: UIViewController {
     
     private let tableview = UITableView(frame: R.Rect.default, style: .grouped).then {
         $0.backgroundColor = Color.bgLightGay
+        $0.separatorColor = Color.bgGay
         $0.sectionHeaderHeight = 1
-//        $0.sectionFooterHeight = 10
-        $0.rowHeight = 60
+        $0.rowHeight = 50
         $0.registerCell(BaseTitleTableViewCell.self)
         $0.tableFooterView = UIView()
+        //        $0.sectionFooterHeight = 10
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         layoutViewController()
         configureObservable()
-        
     }
 
     override func didReceiveMemoryWarning() {
