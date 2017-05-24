@@ -85,10 +85,10 @@ public class StandardCoordinateTransform: TransformType {
     init() {}
     public func transformFromJSON(_ value: Any?) -> Object? {
         guard let v = value, let latlng = v as? JSON, latlng.count == 2 else { return nil }
-        return CLLocationCoordinate2D(latitude: latlng[0], longitude: latlng[1])
+        return CLLocationCoordinate2D(latitude: latlng[1], longitude: latlng[0])
     }
     public func transformToJSON(_ value: Object?) -> JSON? {
-        return value.map({ [$0.latitude, $0.longitude] })
+        return value.map({ [$0.longitude, $0.latitude] })
     }
 }
 
@@ -101,12 +101,12 @@ public class StandardCoordinateArrayTransform: TransformType {
         guard let v = value, let array = v as? JSON else { return nil }
         return array.flatMap({ (latlng: [Double]) -> CLLocationCoordinate2D? in
             guard latlng.count == 2 else { return  nil }
-            return CLLocationCoordinate2D(latitude: latlng[0], longitude: latlng[1])
+            return CLLocationCoordinate2D(latitude: latlng[1], longitude: latlng[0])
         })
     }
     public func transformToJSON(_ value: Object?) -> JSON? {
         return value?.map({ (p: CLLocationCoordinate2D) -> [Double] in
-            return [p.latitude, p.longitude]
+            return [p.longitude, p.latitude]
         })
     }
 }

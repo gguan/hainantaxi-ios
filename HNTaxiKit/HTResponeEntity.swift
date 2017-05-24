@@ -178,3 +178,13 @@ public struct HTOrder: Mappable {
 }
 
 
+public struct HTAddress: Mappable {
+    public init() {
+    }
+    public init?(map: Map) {
+    }
+    public mutating func mapping(map: Map) {
+    }
+}
+
+

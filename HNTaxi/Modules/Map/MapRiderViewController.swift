@@ -28,7 +28,6 @@ class MapRiderViewController: UIViewController {
     // MARK: - ViewModel
     fileprivate let viewModel = MapRiderViewModel()
     fileprivate let disposeQueue = DisposeQueue()
-    fileprivate let cache = LocationRecoder(id: "test")
 
     // MARK: - Map
     fileprivate var pathPolyline: MAPolyline?
@@ -312,8 +311,7 @@ class MapRiderViewController: UIViewController {
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
             self.locationSelectView.frame.origin.y = -200
         }, completion: nil)
-        let vc = MapSearchViewController()
-        vc.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+        let vc = MapSearchViewController(canShowHeader: true)
         vc.delegate = self
         self.present(vc, animated: true, completion: nil)
 
@@ -343,7 +341,6 @@ extension MapRiderViewController: MAMapViewDelegate {
     func mapView(_ mapView: MAMapView!, mapDidMoveByUser wasUserAction: Bool) {
         if viewModel.didSelectStartAndEndLocation { return }
         viewModel.currentPosition.value = mapView.centerCoordinate
-        cache.currentLocation.value = mapView.centerCoordinate
         MapSearchManager.searchReGeocode(coordinate:  mapView.centerCoordinate)
             .subscribeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: {[weak self] (location: HTLocation) in

@@ -122,6 +122,17 @@ public struct HTRequest {
                 }
             }
         }
+        
+        public enum User: RequestParameters {
+            case setAddress(type: String, address: HTAddress)
+            public func toRequestEntity() -> RequestEntity {
+                switch self {
+                case .setAddress(let type, let address):
+                    return RequestEntity(POST: "user/address")
+                        .addDictBody(["type": type, "address": address.toJSON()])
+                }
+            }
+        }
     }
     
     public struct Driver {

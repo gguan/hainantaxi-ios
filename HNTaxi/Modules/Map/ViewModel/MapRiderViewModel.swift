@@ -27,12 +27,11 @@ class MapRiderViewModel {
             let sameId = oldId.intersection(newId)
             let un = Array(oldId.subtracting(sameId))
             if !un.isEmpty {
-                // 移除旧数据
-//                drivers.value = [] 
+                drivers.value = []
             }
             unsubscribe(region: un)
-            subscribe(region: ["test"])
-            
+            subscribe(region: Array(newId))
+//            subscribe(region: ["+"])
         }
     }
     
@@ -53,7 +52,6 @@ class MapRiderViewModel {
                 self?.orderLocation.value.from = point
                 let para = HTRequest.Map.region(lat: p.latitude, lng: p.longitude, zoom: 14)
                 let req: Observable<HTRegion> = HTNetworking.modelNetRequest(para)
-                    .do(onNext: { print($0) }, onError: { print($0)})
                 return req.map({ Optional($0) }).catchErrorJustReturn(nil)
             }
             .subscribe(onNext: {[weak self] (newRegion: HTRegion?) in
@@ -74,7 +72,6 @@ class MapRiderViewModel {
     }
     
     func subscribe(region: [String]) {
-
         var observers = [Observable<MQTTMessage>]()
         for i in region {
             let sig = MQTTService.subscriptTopic(name: MQTTRiderTopic.regionDrivers(regionId: i))
@@ -87,7 +84,7 @@ class MapRiderViewModel {
                 let model = mapper.map(JSONString: json)
                 return Observable.just(model)
             }
-            .buffer(timeSpan: 1, count: 5, scheduler: SerialDispatchQueueScheduler(qos: DispatchQoS.default))
+            .buffer(timeSpan: 0.5, count: 3, scheduler: SerialDispatchQueueScheduler(qos: DispatchQoS.default))
             .subscribe(onNext: {[weak self] (loc: [MQTTDriverLocation?]) in
                 guard let `self` = self else { return }
                 let location = loc.flatMap({ (ele: MQTTDriverLocation?) -> MQTTDriverLocation? in

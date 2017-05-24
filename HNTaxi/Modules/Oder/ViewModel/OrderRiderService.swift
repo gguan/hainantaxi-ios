@@ -43,7 +43,7 @@ class OrderRiderService {
         lates.subscribe(onNext: {[weak self] (order: HTOrder) in
             self?.order.value = (false, order)
         })
-            .addDisposableTo(disposeBag)
+        .addDisposableTo(disposeBag)
     }
     
     func cancleOrder() -> Observable<Any> {

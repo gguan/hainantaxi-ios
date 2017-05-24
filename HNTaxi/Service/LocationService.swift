@@ -143,13 +143,13 @@ extension CLLocationCoordinate2D {
     }
     
     init?(string: String) {
-        let xy = string.components(separatedBy: ",")
-        guard xy.count == 2,
-            let ystr = xy.last,
-            let y = Double(ystr),
-            let xstr = xy.first,
-            let x = Double(xstr)  else { return nil }
-        latitude = y
-        longitude = x
+        let latlng = string.components(separatedBy: ",")
+        guard latlng.count == 2,
+            let latStr = latlng.last,
+            let lat = Double(latStr),
+            let lngStr = latlng.first,
+            let lng = Double(lngStr)  else { return nil }
+        longitude = lng
+        latitude = lat
     }
 }

@@ -21,13 +21,13 @@ class MobileAuthViewController: UIViewController {
     fileprivate let countryButton = UIButton().then {
         $0.title = " 86 ▾ "
         $0.setTitleColor(Color.textDarkGray, for: .normal)
-        $0.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        $0.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         $0.contentHorizontalAlignment = .left
     }
     fileprivate let sendCodeButton = UIButton().then {
         $0.title = "验证码"
         $0.setTitleColor(UIColor.gray, for: .normal)
-        $0.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        $0.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         $0.contentHorizontalAlignment = .right
     }
     fileprivate let phoneTextField = UITextField().then {
@@ -43,7 +43,7 @@ class MobileAuthViewController: UIViewController {
     fileprivate let loginButton = UIButton().then {
         $0.title = "登录 / 注册"
         $0.setTitleColor(Color.textDarkGray, for: .normal)
-        $0.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        $0.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         $0.layer.borderColor = Color.textDarkGray.cgColor
         $0.layer.borderWidth = 1
         $0.layer.cornerRadius = 4

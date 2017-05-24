@@ -28,14 +28,30 @@ class MapSearchViewController: UIViewController {
             poiList.reloadData()
         }
     }
-    fileprivate let poiList = UITableView().then {
+    fileprivate let poiList = UITableView(frame: CGRect.zero, style: .grouped).then {
         $0.registerCell(MapSearchResultTableViewCell.self)
+        $0.registerHeaderFooter(MapSearchResultHeaderView.self)
         $0.tableFooterView = UIView()
-        $0.rowHeight = 70
+        $0.tableHeaderView = UIView(frame: CGRect(width: 1, height: 1))
+        $0.rowHeight = 60
         $0.backgroundColor = UIColor.white
-        $0.separatorColor = UIColor.lightGray
+        $0.separatorColor = Color.bgGay
         $0.keyboardDismissMode = .onDrag
     }
+    fileprivate let canShowHeader: Bool
+    
+    init(canShowHeader: Bool = false) {
+        self.canShowHeader = canShowHeader
+        super.init(nibName: nil, bundle: nil)
+        modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        canShowHeader = false
+        super.init(coder: aDecoder)
+        modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         layoutViewController()
@@ -61,6 +77,8 @@ class MapSearchViewController: UIViewController {
             make.right.equalTo(view).offset(-R.Margin.medium)
             make.left.equalTo(view).offset(R.Margin.medium)
         }
+        
+
         
     }
     
@@ -111,6 +129,21 @@ extension MapSearchViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return poiData.count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return canShowHeader ? " " : nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 60
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard canShowHeader else { return nil }
+        let header: MapSearchResultHeaderView = tableView.dequeueReusableHeaderFooter()
+        header.configureWithDataModel(left: (title: "家", address: "苹果社区"), right: (title: "公司", address: "百子湾路"))
+        return header
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

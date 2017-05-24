@@ -163,6 +163,9 @@ extension MQTTService: CocoaMQTTDelegate {
     
     func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: UInt16 ) {
 //        print("Receive \(message.topic): \(message.string ?? "")")
+        if message.topic.hasPrefix("region/") && message.topic.hasSuffix("/driver") {
+            subscriptList["region/+/driver"]?.on(.next(message))
+        }
         subscriptList[message.topic]?.on(.next(message))
     }
     
@@ -172,6 +175,7 @@ extension MQTTService: CocoaMQTTDelegate {
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didUnsubscribeTopic topic: String) {
+//        print("Unsubscribe: \(topic)")
     }
     
     func mqttDidPing(_ mqtt: CocoaMQTT) {
@@ -187,6 +191,6 @@ extension MQTTService: CocoaMQTTDelegate {
             mqtt.connect()
         }
         didSubscript.removeAll()
-        print("MQTT: DidDisconnect \(err?.localizedDescription ?? "")")
+//        print("MQTT: DidDisconnect \(err?.localizedDescription ?? "")")
     }
 }

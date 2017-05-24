@@ -34,6 +34,12 @@
 		6A637C131ED43C7C0090678C /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A637C121ED43C7C0090678C /* MessageViewController.swift */; };
 		6A63FD4A1ECC3FA100F3C54F /* SMSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A63FD491ECC3FA100F3C54F /* SMSService.swift */; };
 		6A63FD4F1ECC533000F3C54F /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A63FD4E1ECC533000F3C54F /* UserViewController.swift */; };
+		6AA3042B1ED534980059DA78 /* AddressBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA3042A1ED534980059DA78 /* AddressBookViewController.swift */; };
+		6AA3042E1ED53FF00059DA78 /* AddressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA3042D1ED53FF00059DA78 /* AddressViewModel.swift */; };
+		6AA304301ED544530059DA78 /* AboutAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA3042F1ED544530059DA78 /* AboutAppViewController.swift */; };
+		6AA304321ED544BA0059DA78 /* ConstValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA304311ED544BA0059DA78 /* ConstValue.swift */; };
+		6AA304341ED5662E0059DA78 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA304331ED5662E0059DA78 /* AccountViewController.swift */; };
+		6AA304361ED589D00059DA78 /* UserInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AA304351ED589D00059DA78 /* UserInfoHeaderView.swift */; };
 		6AB138B91ECABC97009DBD62 /* MapSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB138B81ECABC97009DBD62 /* MapSearchViewController.swift */; };
 		6AB138BB1ECABD29009DBD62 /* MapSearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB138BA1ECABD29009DBD62 /* MapSearchResultTableViewCell.swift */; };
 		6AB138BD1ECAD5CA009DBD62 /* MapSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB138BC1ECAD5CA009DBD62 /* MapSearchBar.swift */; };
@@ -164,6 +170,12 @@
 		6A637C121ED43C7C0090678C /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
 		6A63FD491ECC3FA100F3C54F /* SMSService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSService.swift; sourceTree = "<group>"; };
 		6A63FD4E1ECC533000F3C54F /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
+		6AA3042A1ED534980059DA78 /* AddressBookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressBookViewController.swift; sourceTree = "<group>"; };
+		6AA3042D1ED53FF00059DA78 /* AddressViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressViewModel.swift; sourceTree = "<group>"; };
+		6AA3042F1ED544530059DA78 /* AboutAppViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutAppViewController.swift; sourceTree = "<group>"; };
+		6AA304311ED544BA0059DA78 /* ConstValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstValue.swift; sourceTree = "<group>"; };
+		6AA304331ED5662E0059DA78 /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		6AA304351ED589D00059DA78 /* UserInfoHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoHeaderView.swift; sourceTree = "<group>"; };
 		6AB138B81ECABC97009DBD62 /* MapSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSearchViewController.swift; sourceTree = "<group>"; };
 		6AB138BA1ECABD29009DBD62 /* MapSearchResultTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSearchResultTableViewCell.swift; sourceTree = "<group>"; };
 		6AB138BC1ECAD5CA009DBD62 /* MapSearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSearchBar.swift; sourceTree = "<group>"; };
@@ -373,9 +385,13 @@
 		6A63FD4B1ECC532600F3C54F /* User */ = {
 			isa = PBXGroup;
 			children = (
+				6AA3042C1ED53FE50059DA78 /* ViewModel */,
 				6A63FD4C1ECC532600F3C54F /* Classes */,
 				6A63FD4D1ECC532600F3C54F /* Views */,
 				6A63FD4E1ECC533000F3C54F /* UserViewController.swift */,
+				6AA3042A1ED534980059DA78 /* AddressBookViewController.swift */,
+				6AA3042F1ED544530059DA78 /* AboutAppViewController.swift */,
+				6AA304331ED5662E0059DA78 /* AccountViewController.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -390,8 +406,17 @@
 		6A63FD4D1ECC532600F3C54F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6AA304351ED589D00059DA78 /* UserInfoHeaderView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		6AA3042C1ED53FE50059DA78 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				6AA3042D1ED53FF00059DA78 /* AddressViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		6AB32A971ECC283D00096187 /* Auth */ = {
@@ -610,6 +635,7 @@
 				6AF8D9BD1EC98B8900F9D951 /* ValidationService.swift */,
 				6A5836D11EC9C81F0035EF01 /* DisposeQueue.swift */,
 				6A637C0E1ED436FD0090678C /* SortDictionary.swift */,
+				6AA304311ED544BA0059DA78 /* ConstValue.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -1024,6 +1050,7 @@
 			files = (
 				6AF8D9B01EC9851500F9D951 /* MapSearchManager.swift in Sources */,
 				6A63FD4F1ECC533000F3C54F /* UserViewController.swift in Sources */,
+				6AA304341ED5662E0059DA78 /* AccountViewController.swift in Sources */,
 				6A02626E1ECD991500E576AB /* MapDriverViewController.swift in Sources */,
 				6AF8D9BF1EC98B8900F9D951 /* Foudation+Extension.swift in Sources */,
 				6A0262651ECD596000E576AB /* MQTTService.swift in Sources */,
@@ -1035,6 +1062,7 @@
 				6A0262791ECDB08300E576AB /* DriverLocation.swift in Sources */,
 				6A637C091ED436380090678C /* CityListViewController.swift in Sources */,
 				6AF8D9981EC96A6100F9D951 /* ViewController.swift in Sources */,
+				6AA304321ED544BA0059DA78 /* ConstValue.swift in Sources */,
 				6A637C131ED43C7C0090678C /* MessageViewController.swift in Sources */,
 				6AF8D9C31EC98B8900F9D951 /* Reusable.swift in Sources */,
 				6AB138B91ECABC97009DBD62 /* MapSearchViewController.swift in Sources */,
@@ -1043,11 +1071,13 @@
 				6AF8D9A81EC980D200F9D951 /* MapRiderViewController.swift in Sources */,
 				6AF8D9D31EC9A76B00F9D951 /* Then.swift in Sources */,
 				6AF8D9C01EC98B8900F9D951 /* Layout.swift in Sources */,
+				6AA304361ED589D00059DA78 /* UserInfoHeaderView.swift in Sources */,
 				6AF8D9C11EC98B8900F9D951 /* OptionalVariable.swift in Sources */,
 				6A02626A1ECD8A2100E576AB /* MovingAnnotation.swift in Sources */,
 				6A0262751ECDA87E00E576AB /* MapRiderViewModel.swift in Sources */,
 				6AF8D9DE1EC9AC3100F9D951 /* SeparatedLineTableViewCell.swift in Sources */,
 				6AF8D9971EC96A6100F9D951 /* RiderAppDelegate.swift in Sources */,
+				6AA3042B1ED534980059DA78 /* AddressBookViewController.swift in Sources */,
 				6A5836D21EC9C81F0035EF01 /* DisposeQueue.swift in Sources */,
 				6AF8D9D51EC9ABE000F9D951 /* LocationSelectView.swift in Sources */,
 				6A0262721ECDA67100E576AB /* DriveAppDelegate.swift in Sources */,
@@ -1059,6 +1089,7 @@
 				6AF8D9DB1EC9AC3100F9D951 /* BarButton.swift in Sources */,
 				6AF8D9DC1EC9AC3100F9D951 /* QuickButton.swift in Sources */,
 				6AF8D9C61EC98B8900F9D951 /* ValidationService.swift in Sources */,
+				6AA304301ED544530059DA78 /* AboutAppViewController.swift in Sources */,
 				6AF8D9BE1EC98B8900F9D951 /* ContainerViewModelProtocol.swift in Sources */,
 				6A15F9221ED2ED8C002739FA /* BaseStyleTableViewCell.swift in Sources */,
 				6A0262771ECDA9AF00E576AB /* MapElementRender.swift in Sources */,
@@ -1073,6 +1104,7 @@
 				6AB138BD1ECAD5CA009DBD62 /* MapSearchBar.swift in Sources */,
 				6AF8D9C41EC98B8900F9D951 /* Signal.swift in Sources */,
 				6AB138BB1ECABD29009DBD62 /* MapSearchResultTableViewCell.swift in Sources */,
+				6AA3042E1ED53FF00059DA78 /* AddressViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

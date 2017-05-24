@@ -21,13 +21,8 @@ class UserViewController: UIViewController {
                            ["退出登录"]]
     
     private let tableview = UITableView(frame: R.Rect.default, style: .grouped).then {
-        $0.backgroundColor = Color.bgLightGay
-        $0.separatorColor = Color.bgGay
-        $0.sectionHeaderHeight = 1
-        $0.rowHeight = 50
         $0.registerCell(BaseTitleTableViewCell.self)
-        $0.tableFooterView = UIView()
-        //        $0.sectionFooterHeight = 10
+        $0.setDefaultStyle()
     }
 
     override func viewDidLoad() {
@@ -63,8 +58,20 @@ extension UserViewController: UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == Config.logOutSection {
+        switch (indexPath.section, indexPath.row) {
+        case (0, 0):
+            navigationController?.pushViewController(AccountViewController(), animated: true)
+        case (1, 0):
+            navigationController?.pushViewController(AddressBookViewController(), animated: true)
+        case (2, 1):
+            UIApplication.shared.openURL(ConstValue.Application.appStore)
+        case (3, 1):
+            navigationController?.pushViewController(AboutAppViewController(), animated: true)
+        case (4, _):
             HTAuthManager.default.logout()
+            navigationController?.popViewController(animated: true)
+        default:
+            break
         }
     }
     

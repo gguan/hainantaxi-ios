@@ -10,18 +10,17 @@ import HNTaxiKit
 
 class DriverLocation {
     public private(set) var data: MQTTDriverLocation
-    public private(set) var lastUpdateTime: Date
     public var isVaild: Bool {
-        return lastUpdateTime.timeIntervalSinceNow > -5
+        guard let ts = data.timestamp?.timeIntervalSinceNow else { return false }
+//        print("TimeIntervalSinceNow \(lastUpdateTime.timeIntervalSinceNow )")
+        return ts > -5
     }
     init(_ location: MQTTDriverLocation) {
         data = location
-        lastUpdateTime = Date()
     }
     
     func update(location: MQTTDriverLocation) {
         data = location
-        lastUpdateTime = Date()
     }
 }
 

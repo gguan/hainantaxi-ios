@@ -1,3 +1,4 @@
+
 platform :ios, '8.0'
 use_frameworks!
 
@@ -46,12 +47,18 @@ def mapframework
     pod 'AMapNavi'
 end
 
+
+def payframework
+end
+
+
 target 'HNTaxi' do
     pod 'R.swift'
     baseframework
     uiframework
     mapframework
     smsframework
+    payframework
 end
 
 target 'HNTaxiKit' do

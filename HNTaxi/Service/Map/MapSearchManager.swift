@@ -136,6 +136,7 @@ class MapSearchManager: NSObject,  AMapSearchDelegate {
                         guard let line = step.polyline else { return [] }
                         return CLLocationCoordinate2D.decode(string: line)
                     })
+                    print(path.steps?.first?.polyline ?? "")
                     let path = HTPath(distance: path.distance, duration: path.duration, tolls: Double(route.taxiCost), lineCoordinates: points)
                     anyObserver.on(.next(path))
                     anyObserver.on(.completed)

@@ -359,6 +359,17 @@ extension UIViewController {
 
 
 
+extension UITableView {
+    func setDefaultStyle() {
+        backgroundColor = Color.bgLightGay
+        separatorColor = Color.bgGay
+        rowHeight = 50
+        tableFooterView = UIView()
+        tableHeaderView = UIView(frame: CGRect(width: R.Width.screen, height: 10))
+        sectionFooterHeight = 10
+        sectionHeaderHeight = 1
+    }
+}
 
 
 
