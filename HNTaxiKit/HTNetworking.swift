@@ -109,7 +109,7 @@ public struct HTRequest {
                 case .latest:
                     return RequestEntity(GET: "order/latest")
                 case .preOrder(let req):
-                    return RequestEntity(POST: "order/preview")
+                    return RequestEntity(POST: "order/estimatePrice")
                         .addMapBody(req)
                 case .reqOrder(let req):
                     return RequestEntity(POST: "order/request")

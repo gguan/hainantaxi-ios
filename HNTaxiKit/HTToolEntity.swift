@@ -22,14 +22,14 @@ extension String {
 }
 
 
-enum UserRole: String {
+public enum UserRole: String {
     case driver = "driver"
     case rider = "rider"
-    var isDriver: Bool {
+    public var isDriver: Bool {
         return self == .driver
     }
     
-    var isRider: Bool {
+    public var isRider: Bool {
         return self == .rider
     }
 }

@@ -50,8 +50,8 @@ struct R: Rswift.Validatable {
   
   /// This `R.image` struct is generated, and contains static references to 42 images.
   struct image {
-    /// Image `bg_wite_card`.
-    static let bg_wite_card = Rswift.ImageResource(bundle: R.hostingBundle, name: "bg_wite_card")
+    /// Image `bg_white_card`.
+    static let bg_white_card = Rswift.ImageResource(bundle: R.hostingBundle, name: "bg_white_card")
     /// Image `icon_add`.
     static let icon_add = Rswift.ImageResource(bundle: R.hostingBundle, name: "icon_add")
     /// Image `icon_arrow_down`.
@@ -135,9 +135,9 @@ struct R: Rswift.Validatable {
     /// Image `title_label`.
     static let title_label = Rswift.ImageResource(bundle: R.hostingBundle, name: "title_label")
     
-    /// `UIImage(named: "bg_wite_card", bundle: ..., traitCollection: ...)`
-    static func bg_wite_card(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
-      return UIKit.UIImage(resource: R.image.bg_wite_card, compatibleWith: traitCollection)
+    /// `UIImage(named: "bg_white_card", bundle: ..., traitCollection: ...)`
+    static func bg_white_card(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.bg_white_card, compatibleWith: traitCollection)
     }
     
     /// `UIImage(named: "icon_add", bundle: ..., traitCollection: ...)`

@@ -13,12 +13,31 @@ import CoreLocation
 import CocoaMQTT
 import ObjectMapper
 
+
+extension HTReuqestOrder {
+    static func build(location: OrderSelectLocation, path: HTPath?) -> HTReuqestOrder? {
+        guard let from = location.from,
+            let to = location.to,
+            let distance = path?.distance,
+            let duration  = path?.duration else { return nil }
+        return HTReuqestOrder(from: from, to: to, distance: distance, duration: duration )
+    }
+}
+
+
 class MapRiderViewModel {
     
-    let currentPosition =  Variable<Coordinate2D?>(nil)
-    let orderLocation = Variable<OrderSelectLocation>(OrderSelectLocation())
-    let travelPath = Variable<HTPath?>(nil)
-    let drivers = Variable<[DriverLocation]>([])
+    
+    private let orderService = OrderRiderService()
+    
+    // 订单预览变化
+    let orderPreview    = Variable<(req: HTReuqestOrder?, res: HTOrderPreview?)>.init((req: nil, res: nil))
+    // 当前位置变化
+    let currentPosition = Variable<Coordinate2D?>(nil)
+    // 路径会话变化
+    let orderLocation   = Variable<OrderSelectLocation>(OrderSelectLocation())
+    // 附近司机
+    let drivers         = Variable<[DriverLocation]>([])
 
     private var region: HTRegion? {
         didSet {
@@ -31,7 +50,6 @@ class MapRiderViewModel {
             }
             unsubscribe(region: un)
             subscribe(region: Array(newId))
-//            subscribe(region: ["+"])
         }
     }
     
@@ -42,14 +60,14 @@ class MapRiderViewModel {
     
     private let disposeQueue = DisposeQueue()
     
-    init() {
+    init(dependence HUG: HUDManager) {
+        // 当前位置发生变化
         currentPosition
             .asObservable()
-            .flatMap {[weak self] (point: Coordinate2D?) -> Observable<HTRegion?> in
+            .flatMap {(point: Coordinate2D?) -> Observable<HTRegion?> in
                 guard let p = point else {
                     return Observable.just(nil)
                 }
-                self?.orderLocation.value.from = point
                 let para = HTRequest.Map.region(lat: p.latitude, lng: p.longitude, zoom: 14)
                 let req: Observable<HTRegion> = HTNetworking.modelNetRequest(para)
                 return req.map({ Optional($0) }).catchErrorJustReturn(nil)
@@ -59,16 +77,76 @@ class MapRiderViewModel {
             })
             .addDisposableTo(disposeQueue, key: "CurrentPosition")
         
-        orderLocation.asObservable().flatMap { (location: OrderSelectLocation) -> Observable<HTPath?> in
-                guard let f = location.from, let t = location.to else {
+        
+        // 订单位置发生变化
+        orderLocation.asObservable()
+            .distinctUntilChanged({ (old: OrderSelectLocation, new: OrderSelectLocation) -> Bool in
+                func isSame(oldCoor: CLLocationCoordinate2D?, newCoor: CLLocationCoordinate2D?) -> Bool {
+                    var same = false
+                    if let o = oldCoor, let n = newCoor {
+                        same = o.latitude.isEqual(to: n.latitude) && o.longitude.isEqual(to: n.longitude)
+                    } else if oldCoor == nil &&  newCoor == nil {
+                        same = true
+                    }
+                    return same
+                }
+               return isSame(oldCoor: old.from?.coordinate, newCoor: new.from?.coordinate)
+                && isSame(oldCoor: old.to?.coordinate, newCoor: new.to?.coordinate)
+            })
+            .flatMap { (location: OrderSelectLocation) -> Observable<HTReuqestOrder?> in
+                guard let f = location.from?.coordinate, let t = location.to?.coordinate else {
                     return Observable.just(nil)
                 }
                 let req: Observable<HTPath> = MapSearchManager.searchPathInfo(from: f, to: t)
-                return req.map({ Optional($0)}).catchErrorJustReturn(nil)
+                return req.map({ HTReuqestOrder.build(location: location, path: $0) })
+                    .catchErrorJustReturn(nil)
             }
-            .bind(to: travelPath)
-            .addDisposableTo(disposeQueue, key: "orderLocation")
-    
+            .distinctUntilChanged({ (old: HTReuqestOrder?, new: HTReuqestOrder?) -> Bool in
+                if old == nil && new == nil { return true }
+                return false
+            })
+            .observeOn(MainScheduler.asyncInstance)
+            .subscribe(onNext: {[weak self] (request: HTReuqestOrder?) in
+                guard let `self` = self else { return }
+                let key = "OrderPreview"
+                guard let req = request else {
+                    self.disposeQueue.dispose(key)
+                    self.orderPreview.value = (nil, nil)
+                    return
+                }
+                HUG.showHUD()
+                self.orderService.preorder(request: req)
+                    .subscribe(onNext: {[weak self] (pre: HTOrderPreview) in
+                        self?.orderPreview.value = (request, pre)
+                        HUG.hideHUD()
+                    }, onError: {[weak self] error in
+                        HUG.showError(error)
+                        self?.orderPreview.value = (request, nil)
+                    })
+                    .addDisposableTo(self.disposeQueue, key: key)
+            })
+            .addDisposableTo(disposeQueue, key: "OrderLocationChange")
+        
+        
+        // 位置变化进行反编码
+        currentPosition.asObservable()
+            .flatMap { (coor: Coordinate2D?) -> Observable<HTResult<HTLocation>> in
+                guard let p = coor else {
+                    return Observable.just(HTResult<HTLocation>.error(error: NSError.build(desc: "Latlng not found")))
+                }
+                return MapSearchManager.searchReGeocode(coordinate: p)
+                    .mapToResult(error: "ReGeocode error")
+            }
+            .subscribe(onNext: {[weak self] (loc: HTResult<HTLocation>) in
+                switch loc {
+                case .success(let value):
+                    self?.orderLocation.value.from = value
+                case .error(let error):
+                    print(error)
+                }
+            })
+            .addDisposableTo(disposeQueue, key: "ReGeocode")
+
     }
     
     func subscribe(region: [String]) {

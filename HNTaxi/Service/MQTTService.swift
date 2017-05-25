@@ -21,6 +21,18 @@ protocol MQTTTopicProtocol {
     func toString() -> String
 }
 
+
+enum MQTTCommonTopic: MQTTTopicProtocol {
+    case disconnect
+    
+    func toString() -> String {
+        switch self {
+        case .disconnect:
+            return "disconnect"
+        }
+    }
+}
+
 enum MQTTRiderTopic: MQTTTopicProtocol {
     
     // Subscript: 区域内司机的位置
@@ -55,7 +67,7 @@ enum MQTTDriverTopic: MQTTTopicProtocol {
     func toString() -> String {
         switch self {
         case .driverLocation:
-            return "driver/location"
+            return "location/driver"
         case .orderStatus(let id):
             return "rider/order/\(id)"
         case .driverStatus:
@@ -71,34 +83,50 @@ enum MQTTDriverTopic: MQTTTopicProtocol {
 class MQTTService: NSObject {
     static let shared = MQTTService()
     var reconnectWhenError = true
+    var connectStatus: Observable<CocoaMQTTConnState> {
+        return connectStatusVar.asObservable()
+    }
+    fileprivate let connectStatusVar = Variable<CocoaMQTTConnState>(CocoaMQTTConnState.initial)
     
     fileprivate var mqtt: CocoaMQTT?
     fileprivate var subscriptList = [String: PublishSubject<MQTTMessage>]()
     fileprivate var didSubscript = [String]()
-    fileprivate var id: String = "iOS-\(String.randomString(length: 10))"
+    fileprivate var id: String = "none"
    
     private override init() {}
-    func start() {
+    func start(id: String) {
         if let m = mqtt {
             if m.connState == .disconnected {
                 m.connect()
             }
         } else {
-            mqtt = CocoaMQTT(clientID: id, host: "hn.tbxark.site", port: 1883)
-            mqtt?.username = ""
+            mqtt = CocoaMQTT(clientID: "iOS-\(id)-\(String.randomString(length: 10))", host: "hn.tbxark.site", port: 1883)
+            mqtt?.username = id
             mqtt?.password = ""
-            mqtt?.willMessage = CocoaMQTTWill(topic: "/will", message: "dieout")
+            mqtt?.willMessage = CocoaMQTTWill(topic: MQTTCommonTopic.disconnect.toString(), message: "{\"id\":\"\(id)\"}")
             mqtt?.keepAlive = 60
             mqtt?.delegate = self
+            mqtt?.autoReconnect = true
+            connectStatusVar.value = .connecting
             mqtt?.connect()
         }
     }
     
+    func restart() {
+        start(id: id)
+    }
+    
     func reset(id: String) {
+        if id == self.id, let m = mqtt {
+            if m.connState == .disconnected {
+                m.connect()
+            }
+            return
+        }
         stop()
         self.id = id
         didSubscript.removeAll()
-        start()
+        start(id: id)
     }
     
     func stop() {
@@ -128,7 +156,7 @@ class MQTTService: NSObject {
     }
     
     private func publish(topic: String, message: String) -> MQTTMsgId? {
-        return mqtt?.publish(topic, withString: message, qos: CocoaMQTTQOS.qos1)
+        return mqtt?.publish(topic, withString: message, qos: CocoaMQTTQOS.qos1, retained: true)
     }
     
     private func unsubscriptTopic(name: String) -> MQTTMsgId? {
@@ -141,6 +169,7 @@ class MQTTService: NSObject {
 
 extension MQTTService: CocoaMQTTDelegate {
     func mqtt(_ mqtt: CocoaMQTT, didConnect host: String, port: Int) {
+        connectStatusVar.value = mqtt.connState
 //        print("Connect: \(host) \(port)")
     }
     
@@ -152,6 +181,7 @@ extension MQTTService: CocoaMQTTDelegate {
                 }
             }
         }
+        connectStatusVar.value = mqtt.connState
     }
     
     func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: UInt16) {
@@ -187,10 +217,8 @@ extension MQTTService: CocoaMQTTDelegate {
     }
     
     func mqttDidDisconnect(_ mqtt: CocoaMQTT, withError err: Error?) {
-        if reconnectWhenError {
-            mqtt.connect()
-        }
-        didSubscript.removeAll()
 //        print("MQTT: DidDisconnect \(err?.localizedDescription ?? "")")
+        didSubscript.removeAll()
+        connectStatusVar.value = mqtt.connState
     }
 }

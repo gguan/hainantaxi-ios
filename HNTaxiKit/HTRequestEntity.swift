@@ -57,24 +57,32 @@ public struct MQTTDriverLocation: Mappable {
 
 public struct HTReuqestOrder: Mappable {
     public var carType: HTCarType = .common
-    public private(set) var from: CLLocationCoordinate2D?
-    public private(set) var to: CLLocationCoordinate2D?
+    public private(set) var from: HTLocation?
+    public private(set) var to: HTLocation?
+    public private(set) var distance: Int?
+    public private(set) var duration: Int?
     
     public init?(map: Map) {
     }
     
-    public init(from: CLLocationCoordinate2D?,
-         to:  CLLocationCoordinate2D?,
+    public init(from: HTLocation,
+         to:  HTLocation,
+         distance: Int,
+         duration: Int,
          carType: HTCarType = .common ) {
         self.from = from
         self.to = to
+        self.distance = distance
+        self.duration = duration
         self.carType = carType
     }
-
+    
     public mutating func mapping(map: Map) {
         carType <- (map["carType"], Transform.carType)
-        from  <- (map["from"], Transform.standardCoordinate)
-        to  <- (map["to"], Transform.standardCoordinate)
+        from  <- map["from"]
+        to  <- map["to"]
+        distance <- map["distance"]
+        duration <- map["duration"]
     }
 
 }

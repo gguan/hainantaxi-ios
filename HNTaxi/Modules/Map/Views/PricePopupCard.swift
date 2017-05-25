@@ -17,7 +17,7 @@ class PricePopupCard: UIView {
     }
     fileprivate let distance = UILabel()
     fileprivate let price = UILabel()
-    fileprivate let commit = UIButton().then {
+    let commit = UIButton().then {
         $0.backgroundColor = Color.orange
         $0.layer.cornerRadius = 4
         $0.clipsToBounds = true
@@ -46,7 +46,7 @@ class PricePopupCard: UIView {
     }
     
     func shareInit() {
-        let bgImage = UIImageView.init(image: R.image.bg_wite_card())
+        let bgImage = UIImageView.init(image: R.image.bg_white_card())
         let spLine = UIView()
         spLine.backgroundColor = UIColor(white: 0.9, alpha: 1)
         addSubview(bgImage)

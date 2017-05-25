@@ -38,11 +38,14 @@ class LocationService: NSObject, CLLocationManagerDelegate {
                 manager.startUpdatingLocation()
             }
         }
-        manager.startUpdatingLocation()
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(LocationService.applicationEnterBackground),
-                                               name: NSNotification.Name.UIApplicationDidEnterBackground,
-                                               object: nil)
+        if GlobalConfig.role.isDriver {
+            manager.startUpdatingLocation()
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(LocationService.applicationEnterBackground),
+                                                   name: NSNotification.Name.UIApplicationDidEnterBackground,
+                                                   object: nil)
+
+        }
     }
     
     
@@ -93,10 +96,10 @@ class LocationService: NSObject, CLLocationManagerDelegate {
         guard UIApplication.shared.applicationState == .background else { return }
         if timer != nil { return }
         _ = bgTask.beginNewBackgroundTask()
-        timer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(LocationService.restartLocationUpdates), userInfo: nil, repeats: false)
+        timer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(LocationService.restartLocationUpdates), userInfo: nil, repeats: false)
         stopTimer?.invalidate()
         stopTimer = nil
-        timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(LocationService.stopLocationTracking), userInfo: nil, repeats: false)
+        stopTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(LocationService.stopLocationTracking), userInfo: nil, repeats: false)
     }
 
 }

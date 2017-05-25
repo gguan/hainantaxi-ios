@@ -22,20 +22,8 @@ class OrderRiderService {
         fetchLatesOrder()
     }
     
-    func preorder(isPreOrder: Bool = false,
-                  from: CLLocationCoordinate2D,
-                  to: CLLocationCoordinate2D,
-                  type: HTCarType = HTCarType.common) -> Observable<HTOrder> {
-        
-        let data = HTReuqestOrder(from: from, to: to, carType: type)
-        let req = isPreOrder ? HTRequest.Rider.Order.preOrder(req: data) : HTRequest.Rider.Order.reqOrder(req: data)
-        return HTNetworking.modelNetRequest(req)
-            .do(onNext: {[weak self] (order: HTOrder) in
-                    self?.changeOrderResult(isPreOrder: isPreOrder, data: order)
-                }, onError: {[weak self] _ in
-                    self?.fetchLatesOrder()
-                    self?.changeOrderResult(isPreOrder: isPreOrder, data: nil)
-                })
+    func preorder(request: HTReuqestOrder, type: HTCarType = HTCarType.common) -> Observable<HTOrderPreview> {
+        return HTNetworking.modelNetRequest(HTRequest.Rider.Order.preOrder(req: request))
     }
     
     func fetchLatesOrder() {

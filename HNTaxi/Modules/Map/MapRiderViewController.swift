@@ -13,20 +13,13 @@ import RxSwift
 import SVProgressHUD
 import CocoaMQTT
 
-/*
- 1. 确认起始点
- 2. MQTT - 获取起始点附近车辆
- 3. 选取终点
- 4. MQTT - 等待司机接单
- 5. MQTT - 更新司机位置
- */
 
 class MapRiderViewController: UIViewController {
     // MAR: Flag
     fileprivate var isInitial = true
     
     // MARK: - ViewModel
-    fileprivate let viewModel = MapRiderViewModel()
+    fileprivate let viewModel = MapRiderViewModel(dependence: SVProgressHUDManager())
     fileprivate let disposeQueue = DisposeQueue()
 
     // MARK: - Map
@@ -152,6 +145,7 @@ class MapRiderViewController: UIViewController {
         locationSelectView.buttons.destination.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 guard let `self` = self else { return }
+                guard !self.viewModel.orderLocation.value.isVaild else { return }
                 self.showSearchViewController()
             })
             .addDisposableTo(disposeQueue, key: "destination")
@@ -164,7 +158,8 @@ class MapRiderViewController: UIViewController {
                 self.navigationController?.pushViewController(vc, animated: true)
             })
             .addDisposableTo(disposeQueue, key: "userItem")
-        
+       
+        // 消息按钮
         msgItem.rx.tap
             .subscribe(onNext: {[weak self] _ in
                 guard let `self` = self else { return }
@@ -183,60 +178,34 @@ class MapRiderViewController: UIViewController {
             })
             .addDisposableTo(disposeQueue, key: "backItem")
     
-        // 订单地址
-        viewModel.travelPath.asObservable()
-            .observeOn(MainScheduler.asyncInstance)
-            .subscribe(onNext: {[weak self] (travelPath: HTPath?) in
-                self?.changeDisplayPath(travelPath: travelPath)
+        // 订单预览
+        viewModel.orderPreview.asObservable()
+            .subscribe(onNext: {[weak self] (req: HTReuqestOrder?, res: HTOrderPreview?) in
+                self?.changeDisplayPath(travelRequest: req, travelRespone: res)
             })
-            .addDisposableTo(disposeQueue, key: "travelPath")
+            .addDisposableTo(disposeQueue, key: "TravelPathChange")
         
-        // 订单状态
+        
+        // 起始点目的地选择状态
         viewModel.orderLocation.asObservable()
-            .map({ !$0.isVaild })
             .observeOn(MainScheduler.asyncInstance)
-            .subscribe(onNext: {[weak self] (isShow) in
-                self?.changeCenterDisplayStatus(isShow: isShow)
+            .subscribe(onNext: {[weak self] (loc: OrderSelectLocation) in
+                self?.locationSelectView.buttons.from.title = loc.from?.name
+                self?.changeCenterDisplayStatus(isShow: !loc.isVaild)
             })
             .addDisposableTo(disposeQueue, key: "orderLocation")
+        
         
         // 附近司机位置
         viewModel.drivers.asObservable()
             .observeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: {[weak self] (drivers: [DriverLocation]) in
-                guard let `self` = self else { return }
-                let current = drivers.flatMap({ $0.data.id })
-                var currentAnnotations = self.carAnnotation
-                var removeAnnotations = [MovingAnnotation]()
-                var activeAnnotations = [String: MovingAnnotation]()
-                for k in currentAnnotations.keys {
-                    guard let an = self.carAnnotation[k] else { continue }
-                    if !current.contains(k) {
-                        removeAnnotations.append(an)
-                        currentAnnotations.removeValue(forKey: k)
-                    } else {
-                        activeAnnotations[k] = an
-                    }
-                }
-                let activeKeys = activeAnnotations.keys
-                self.mapView.removeAnnotations(removeAnnotations)
-                for d in drivers {
-                    guard let id = d.data.id else { return }
-                    if activeKeys.contains(id) {
-                        guard let an = activeAnnotations[id], let p = d.data.locations else { continue }
-                        var loc = [p]
-                        an.addMoveAnimation(withKeyCoordinates: &loc, count: 1, withDuration: 2, withName: nil, completeCallback: nil)
-                    } else if let an = MapElementRender.driverPoint(coordinate: d.data.locations, iden: id) {
-                        currentAnnotations[id] = an
-                        self.mapView.addAnnotation(an)
-                    }
-                }
-                self.carAnnotation = currentAnnotations
+                self?.updateDriverAnnotation(drivers: drivers)
             })
             .addDisposableTo(disposeQueue, key: "driverLocation")
-        
     }
     
+    // 更新 UI操作
     private func changeCenterDisplayStatus(isShow: Bool) {
         if !isShow {
             centerBubbleView.isHidden = true
@@ -254,7 +223,7 @@ class MapRiderViewController: UIViewController {
         }
     }
     
-    private func changeDisplayPath(travelPath: HTPath?,  showPloy: Bool = false ){
+    private func changeDisplayPath(travelRequest: HTReuqestOrder?, travelRespone: HTOrderProtocol?){
         func removeOldAnnotation() {
             if let start = annotation.start  {
                 mapView.removeAnnotation(start)
@@ -269,22 +238,22 @@ class MapRiderViewController: UIViewController {
             pathPolyline = nil
             mapView.remove(line)
         }
-        if let path = travelPath {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
-                self.pricePopupCard.frame.origin.y = PricePopupCard.Layout.showY
-            }, completion: nil)
-            let dis = String(format: "%.1f", Double(path.distance ?? 0)/1000.0)
-            let price = String(format: "%.2f", path.tolls ?? 0)
-            pricePopupCard.configureWithDataModel((distance: dis, price: price))
-            navigationItem.leftBarButtonItem = backItem
-            if showPloy, var coordinates = path.lineCoordinates {
-                let line: MAPolyline = MAPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
-                pathPolyline = line
-                mapView.add(pathPolyline)
+        if let path = travelRequest, let res = travelRespone {
+            // 显示价格框
+            do {
+                UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
+                    self.pricePopupCard.frame.origin.y = PricePopupCard.Layout.showY
+                    self.locationSelectView.frame.origin.y = -200
+                }, completion: nil)
+                let dis = String(format: "%.1f", Double(res.distance ?? 0)/1000.0)
+                let price = String(format: "%.2f", res.estimatePrice ?? 0)
+                pricePopupCard.configureWithDataModel((distance: dis, price: price))
             }
+            
+            navigationItem.leftBarButtonItem = backItem
             removeOldAnnotation()
-            if let start = path.lineCoordinates?.first,
-                let end = path.lineCoordinates?.last {
+            if let start = path.from?.coordinate,
+                let end = path.to?.coordinate {
                 let startPoint = MAPointAnnotation()
                 startPoint.coordinate = start
                 startPoint.title = AnnotationIden.PointType.start
@@ -301,10 +270,44 @@ class MapRiderViewController: UIViewController {
             if pricePopupCard.frame.origin.y.isEqual(to: PricePopupCard.Layout.showY) {
                 UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
                     self.pricePopupCard.frame.origin.y = PricePopupCard.Layout.hideY
+                    self.locationSelectView.frame.origin.y = R.Margin.large                   
                 }, completion: nil)
             }
+            viewModel.currentPosition.value = mapView.centerCoordinate
             removeOldAnnotation()
         }
+    }
+    
+    
+    private func updateDriverAnnotation(drivers: [DriverLocation]) {
+        let current = drivers.flatMap({ $0.data.id })
+        var currentAnnotations = carAnnotation
+        var removeAnnotations = [MovingAnnotation]()
+        var activeAnnotations = [String: MovingAnnotation]()
+        for k in currentAnnotations.keys {
+            guard let an = carAnnotation[k] else { continue }
+            if !current.contains(k) {
+                removeAnnotations.append(an)
+                currentAnnotations.removeValue(forKey: k)
+            } else {
+                activeAnnotations[k] = an
+            }
+        }
+        let activeKeys = activeAnnotations.keys
+        self.mapView.removeAnnotations(removeAnnotations)
+        for d in drivers {
+            guard let id = d.data.id else { return }
+            if activeKeys.contains(id) {
+                guard let an = activeAnnotations[id], let p = d.data.locations else { continue }
+                var loc = [p]
+                an.addMoveAnimation(withKeyCoordinates: &loc, count: 1, withDuration: 2, withName: nil, completeCallback: nil)
+            } else if let an = MapElementRender.driverPoint(coordinate: d.data.locations, iden: id) {
+                currentAnnotations[id] = an
+                mapView.addAnnotation(an)
+            }
+        }
+        carAnnotation = currentAnnotations
+
     }
     
     private func showSearchViewController() {
@@ -331,7 +334,7 @@ extension MapRiderViewController: MapSearchViewControllerDelegate {
     
     func mapSearchViewController(didSelect vc: MapSearchViewController, data: HTLocation) {
         locationSelectView.buttons.destination.title = data.name
-        viewModel.orderLocation.value.to = data.coordinate
+        viewModel.orderLocation.value.to = data
     }
 }
 
@@ -341,16 +344,8 @@ extension MapRiderViewController: MAMapViewDelegate {
     func mapView(_ mapView: MAMapView!, mapDidMoveByUser wasUserAction: Bool) {
         if viewModel.didSelectStartAndEndLocation { return }
         viewModel.currentPosition.value = mapView.centerCoordinate
-        MapSearchManager.searchReGeocode(coordinate:  mapView.centerCoordinate)
-            .subscribeOn(MainScheduler.asyncInstance)
-            .subscribe(onNext: {[weak self] (location: HTLocation) in
-                guard let `self` = self else { return }
-                self.locationSelectView.buttons.from.title = location.name
-            }, onError: { (error: Error) in
-                print(error)
-            })
-            .addDisposableTo(disposeQueue, key: "ReGeocode")
     }
+    
     func mapView(_ mapView: MAMapView!, didUpdate userLocation: MAUserLocation!, updatingLocation: Bool) {
         if isInitial, let loc = userLocation?.coordinate {
             mapView.setZoomLevel(17, animated: true)

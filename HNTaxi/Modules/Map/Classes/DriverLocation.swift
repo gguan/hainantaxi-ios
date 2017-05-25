@@ -26,12 +26,12 @@ class DriverLocation {
 
 
 struct OrderSelectLocation {
-    var from: Coordinate2D?
-    var to: Coordinate2D?
+    var from: HTLocation?
+    var to: HTLocation?
     var isVaild: Bool {
         return from != nil && to != nil
     }
-    init(from: Coordinate2D? = nil , to: Coordinate2D? = nil) {
+    init(from: HTLocation? = nil , to: HTLocation? = nil) {
         self.from = from
         self.to = to
     }

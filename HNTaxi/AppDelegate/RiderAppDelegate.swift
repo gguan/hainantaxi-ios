@@ -7,28 +7,27 @@
 //
 
 import UIKit
+import RxSwift
 import HNTaxiKit
 import IQKeyboardManagerSwift
 
 @UIApplicationMain
 class RiderAppDelegate: UIResponder, UIApplicationDelegate {
 
+    fileprivate let disposeBag = DisposeBag()
     var window: UIWindow?
     var locationUpdateTimer: Timer?
-//    let locationTracker = 
 
     // MARK: Life Cycle
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = MapRiderViewController().embedInNavigation(BaseNavigationViewController.self)
         installVendor()
         setApperance()
-        _ = HTAuthManager.default.readCache()
+        initAuth()
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = MapRiderViewController().embedInNavigation(BaseNavigationViewController.self)
         window?.makeKeyAndVisible()
-        MQTTService.shared.start()
         _ = LocationService.shared.beginLocationTracking()
-        if let _ = launchOptions?[.location] {
-            MQTTService.shared.start()
+        if GlobalConfig.role.isDriver, let _ = launchOptions?[.location] {
             CoreLocationManager.shared.requestAlwaysAuthorization()
             if #available(iOS 9.0, *) {
                 CoreLocationManager.shared.allowsBackgroundLocationUpdates = true
@@ -44,7 +43,7 @@ class RiderAppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        MQTTService.shared.start()
+        MQTTService.shared.restart()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -60,6 +59,8 @@ extension RiderAppDelegate {
         SMSService.install()
         AMapServices.shared().apiKey = "be62598784b82e8a21bbb2ba77427a36"
         IQKeyboardManager.sharedManager().enable = true
+        let userId = HTAuthManager.default.readCache()?.id ?? ""
+        MQTTService.shared.start(id: userId)
     }
     
     fileprivate func setApperance() {
@@ -70,6 +71,15 @@ extension RiderAppDelegate {
         UINavigationBar.appearance().backIndicatorTransitionMaskImage = R.image.nav_back_icon()
         UINavigationBar.appearance().tintColor = UIColor.darkGray
         UITableViewCell.appearance().selectionStyle = .none
+    }
+    
+    fileprivate func initAuth() {
+        HTAuthManager.default.authChangeObservable
+            .subscribe(onNext: { isAuth in
+                MQTTService.shared.reset(id: HTAuthManager.default.userId ?? "none")
+            })
+            .addDisposableTo(disposeBag)
+            
     }
 
 }

@@ -26,7 +26,9 @@ public class HTAuthManager {
     private let authChangeSubject = PublishSubject<Bool>()
     
     
-    
+    public var userId: String? {
+        return auth?.id
+    }
     public var isAuth: Bool {
         return auth?.accessToken != nil
     }
@@ -43,12 +45,12 @@ public class HTAuthManager {
     }
     
     
-    public func readCache() -> Bool {
-        guard let s: String = keychainCache?.syncReadCache(forKey: "auth")?.stringValue() ?? userdefaultCache?.syncReadCache(forKey: "auth") as? String else { return false}
-        guard let model = Mapper<HTAuthRespone>().map(JSONString: s) else { return false }
-        guard let date = model.expires, date.timeIntervalSinceNow > 600 else { return  false}
+    public func readCache() -> HTAuthRespone? {
+        guard let s: String = keychainCache?.syncReadCache(forKey: "auth")?.stringValue() ?? userdefaultCache?.syncReadCache(forKey: "auth") as? String else { return nil}
+        guard let model = Mapper<HTAuthRespone>().map(JSONString: s) else { return nil }
+        guard let date = model.expires, date.timeIntervalSinceNow > 600 else { return  nil}
         auth = model
-        return true
+        return model
     }
     
     public func mobile(country: String, phone: String, code: String) -> Observable<Void> {

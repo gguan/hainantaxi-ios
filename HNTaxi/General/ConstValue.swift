@@ -6,6 +6,11 @@
 //  Copyright © 2017 Tbxark. All rights reserved.
 //
 
+import HNTaxiKit
+
+struct GlobalConfig {
+    static var role = UserRole.rider
+}
 
 struct ConstValue {
     struct Application {

@@ -23,6 +23,7 @@ class UserViewController: UIViewController {
     private let tableview = UITableView(frame: R.Rect.default, style: .grouped).then {
         $0.registerCell(BaseTitleTableViewCell.self)
         $0.setDefaultStyle()
+        $0.tableHeaderView = UserInfoHeaderView().test()
     }
 
     override func viewDidLoad() {

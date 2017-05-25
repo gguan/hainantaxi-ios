@@ -68,11 +68,13 @@ public enum HTCarType: String {
 
 // MARK: Respone
 public struct HTAuthRespone: Mappable {
+    public private(set) var id: String?
     public private(set) var expires: Date?
     public private(set) var accessToken: String?
     public init?(map: Map) {
     }
     public mutating func mapping(map: Map) {
+        id <- map["userId"]
         expires <- (map["expires"], Transform.date)
         accessToken <- map["accessToken"]
     }
@@ -81,9 +83,9 @@ public struct HTAuthRespone: Mappable {
 
 
 public struct HTLocation: Mappable {
-    public private(set) var coordinate: CLLocationCoordinate2D?
     public private(set) var name: String?
     public private(set) var cityCode: String?
+    public private(set) var coordinate: CLLocationCoordinate2D?
     public private(set) var address: String?
     
     public init?(map: Map) {
@@ -96,8 +98,8 @@ public struct HTLocation: Mappable {
         self.address = address
     }
     public mutating func mapping(map: Map) {
-        coordinate <- (map["coordinate"], Transform.coordinate)
         name <- map["name"]
+        coordinate <- (map["coordinate"], Transform.coordinate)
         cityCode <- map["cityCode"]
         address <- map["address"]
     }
@@ -167,13 +169,39 @@ public struct HTComment: Mappable {
 
 
 
+public protocol HTOrderProtocol {
+    var estimatePrice: Double? { get }
+    var duration: Int? { get }
+    var distance: Int? { get }
+}
 
-public struct HTOrder: Mappable {
+public struct HTOrderPreview: Mappable, HTOrderProtocol {
+    public private(set) var estimatePrice: Double?
+    public private(set) var duration: Int?
+    public private(set) var distance: Int?
+    public init?(map: Map) {
+    }
+    public mutating func mapping(map: Map) {
+        estimatePrice <- map["estimatePrice"]
+        duration <- map["duration"]
+        distance <- map["distance"]
+    }
+}
+
+
+
+public struct HTOrder: Mappable, HTOrderProtocol {
     public private(set) var id: String?
+    public private(set) var estimatePrice: Double?
+    public private(set) var duration: Int?
+    public private(set) var distance: Int?
     public init?(map: Map) {
     }
     public mutating func mapping(map: Map) {
         id <- map["id"]
+        estimatePrice <- map["estimatePrice"]
+        duration <- map["duration"]
+        distance <- map["distance"]
     }
 }
 
