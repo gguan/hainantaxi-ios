@@ -34,7 +34,7 @@ public struct MQTTTokenContainer: Mappable {
 public struct MQTTDriverLocation: Mappable {
     public private(set) var id: String?
     public private(set) var timestamp: Date?
-    public private(set) var locations: CLLocationCoordinate2D?
+    public var locations: CLLocationCoordinate2D?
     
     public init?(id: String?,location: CLLocationCoordinate2D?) {
         guard let i = id else { return nil }

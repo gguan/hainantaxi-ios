@@ -14,54 +14,68 @@ import CocoaMQTT
 import ObjectMapper
 
 class OrderRiderService {
-    let order = Variable<(isPreOrder: Bool, data: HTOrder?)>.init((isPreOrder: false, data: nil))
     let orderStatus = Variable<HTOrderStatus>(HTOrderStatus.none)
-    private let disposeBag = DisposeBag()
+    private let disposeQueue = DisposeQueue()
+    private var order: HTOrder? {
+        didSet {
+            let key = "OrderStatus"
+            if let id = oldValue?.id {
+                _ = MQTTService.unsubscriptTopic(name: MQTTRiderTopic.orderStatus(orderId: id))
+                disposeQueue.dispose(key)
+            }
+            if let id = order?.id {
+                MQTTService.subscriptTopic(name: MQTTRiderTopic.orderStatus(orderId: id))
+                    .subscribe(onNext: {[weak self] (msg: CocoaMQTTMessage) in
+                        print(msg.string ?? "")
+                        guard let json = JsonMapper.convertStringToDictionary(text: msg.string),
+                        let status = Transform.orderStatus.transformFromJSON(json) else { return }
+                        self?.orderStatus.value = status
+                    })
+                    .addDisposableTo(disposeQueue, key: key)
+            } 
+        }
+    }
     
     init() {
         fetchLatesOrder()
     }
     
-    func preorder(request: HTReuqestOrder, type: HTCarType = HTCarType.common) -> Observable<HTOrderPreview> {
+    // 订单预览
+    func preorder(request: HTReuqestOrder) -> Observable<HTOrderPreview> {
         return HTNetworking.modelNetRequest(HTRequest.Rider.Order.preOrder(req: request))
     }
     
+    // 确认订单
+    func commitOrder(request: HTReuqestOrder) -> Observable<HTOrder> {
+        return HTNetworking.modelNetRequest(HTRequest.Rider.Order.reqOrder(req: request))
+            .do(onNext: { (order: HTOrder) in
+                self.order = order
+            }, onError: { _ in
+                self.order = nil
+            })
+    }
+    
+    // 当前订单
     func fetchLatesOrder() {
         let lates: Observable<HTOrder> = HTNetworking.modelNetRequest(HTRequest.Rider.Order.latest)
         lates.subscribe(onNext: {[weak self] (order: HTOrder) in
-            self?.order.value = (false, order)
+            self?.order = order
         })
-        .addDisposableTo(disposeBag)
+        .addDisposableTo(disposeQueue, key: "LastOrder")
     }
     
+    // 取消订单
     func cancleOrder() -> Observable<Any> {
-        guard let id = order.value.data?.id else {
+        guard let id = order?.id else {
             return Observable<Any>.error(NSError.build(desc: "Id not found"))
         }
         return HTNetworking.netDefaultRequest(HTRequest.Rider.Order.cancle(orderId: id))
     }
     
-    
+    // 评价订单
     func commentOrder(comment: HTComment) ->  Observable<Any> {
         return Observable<Any>.never()
     }
     
-    
-    private func changeOrderResult(isPreOrder: Bool, data: HTOrder?) {
-        if let id = order.value.data?.id {
-            _ = MQTTService.unsubscriptTopic(name: MQTTRiderTopic.orderStatus(orderId: id))
-        }
-        if let id = data?.id {
-            MQTTService.subscriptTopic(name: MQTTRiderTopic.orderStatus(orderId: id))
-                .map({ (msg: CocoaMQTTMessage) -> HTOrderStatus in
-                    let json = JsonMapper.convertStringToDictionary(text: msg.string)
-                    return Transform.orderStatus.transformFromJSON(json) ?? HTOrderStatus.none
-                })
-                .do(onNext: { (status: HTOrderStatus) in
-                    print("Status : \(status)")
-                })
-                .bind(to: orderStatus)
-                .addDisposableTo(disposeBag)
-        }
-    }
+   
 }

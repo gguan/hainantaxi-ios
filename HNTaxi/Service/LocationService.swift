@@ -126,7 +126,36 @@ class CoreLocationManager: CLLocationManager {
     
 }
 
+
  
+enum CoordinateType {
+    case baidu
+    case mapBar
+    case mapABC
+    case sosoMap
+    case aliyun
+    case google
+    case GPS
+    
+    fileprivate func toAMapCoordinateType() -> AMapCoordinateType {
+        switch self {
+        case .baidu:
+            return AMapCoordinateType.baidu
+        case .mapABC:
+            return AMapCoordinateType.mapABC
+        case .mapBar:
+            return AMapCoordinateType.mapBar
+        case .sosoMap:
+            return AMapCoordinateType.soSoMap
+        case .aliyun:
+            return AMapCoordinateType.aliYun
+        case .google:
+            return AMapCoordinateType.google
+        case .GPS:
+            return AMapCoordinateType.GPS
+        }
+    }
+}
 
  
 extension CLLocationCoordinate2D {
@@ -154,5 +183,12 @@ extension CLLocationCoordinate2D {
             let lng = Double(lngStr)  else { return nil }
         longitude = lng
         latitude = lat
+    }
+    
+    
+    
+    func convertTo(from type: CoordinateType) -> CLLocationCoordinate2D {
+        return AMapCoordinateConvert(self, type.toAMapCoordinateType());
+
     }
 }

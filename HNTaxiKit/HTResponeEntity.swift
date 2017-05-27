@@ -99,7 +99,7 @@ public struct HTLocation: Mappable {
     }
     public mutating func mapping(map: Map) {
         name <- map["name"]
-        coordinate <- (map["coordinate"], Transform.coordinate)
+        coordinate <- (map["points"], Transform.standardCoordinate)
         cityCode <- map["cityCode"]
         address <- map["address"]
     }
@@ -170,9 +170,6 @@ public struct HTComment: Mappable {
 
 
 public protocol HTOrderProtocol {
-    var estimatePrice: Double? { get }
-    var duration: Int? { get }
-    var distance: Int? { get }
 }
 
 public struct HTOrderPreview: Mappable, HTOrderProtocol {
@@ -192,16 +189,10 @@ public struct HTOrderPreview: Mappable, HTOrderProtocol {
 
 public struct HTOrder: Mappable, HTOrderProtocol {
     public private(set) var id: String?
-    public private(set) var estimatePrice: Double?
-    public private(set) var duration: Int?
-    public private(set) var distance: Int?
     public init?(map: Map) {
     }
     public mutating func mapping(map: Map) {
         id <- map["id"]
-        estimatePrice <- map["estimatePrice"]
-        duration <- map["duration"]
-        distance <- map["distance"]
     }
 }
 

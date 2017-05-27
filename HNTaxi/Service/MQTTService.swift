@@ -156,7 +156,7 @@ class MQTTService: NSObject {
     }
     
     private func publish(topic: String, message: String) -> MQTTMsgId? {
-        return mqtt?.publish(topic, withString: message, qos: CocoaMQTTQOS.qos1, retained: true)
+        return mqtt?.publish(topic, withString: message, qos: CocoaMQTTQOS.qos1)
     }
     
     private func unsubscriptTopic(name: String) -> MQTTMsgId? {

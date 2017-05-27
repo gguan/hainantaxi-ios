@@ -112,7 +112,7 @@ public struct HTRequest {
                     return RequestEntity(POST: "order/estimatePrice")
                         .addMapBody(req)
                 case .reqOrder(let req):
-                    return RequestEntity(POST: "order/request")
+                    return RequestEntity(POST: "order/car")
                         .addMapBody(req)
                 case .cancle(let id):
                     return RequestEntity(POST: "order/\(id)")

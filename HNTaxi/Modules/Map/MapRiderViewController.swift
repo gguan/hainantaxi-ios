@@ -15,15 +15,32 @@ import CocoaMQTT
 
 
 class MapRiderViewController: UIViewController {
+    enum Mode {
+        case initial   // 正在初始化和定位
+        case selecting // 正在选择
+        case selected  // 已选择起点终点
+        case waiting   // 正在等待司机
+        case onCar     // 已上车
+    }
     // MAR: Flag
-    fileprivate var isInitial = true
+    fileprivate var mapMode = Mode.initial {
+        didSet {
+            switch mapMode {
+            case .waiting:
+                viewModel.unsubscribeAllRegion()
+            case .selecting:
+                viewModel.setCurrentPosition(coordinate: mapView.centerCoordinate)
+            default:
+                break
+            }
+        }
+    }
     
     // MARK: - ViewModel
     fileprivate let viewModel = MapRiderViewModel(dependence: SVProgressHUDManager())
     fileprivate let disposeQueue = DisposeQueue()
 
     // MARK: - Map
-    fileprivate var pathPolyline: MAPolyline?
     fileprivate var carAnnotation = [String: MovingAnnotation]()
     fileprivate var annotation: (start: MAPointAnnotation?, end: MAPointAnnotation?, driver: MovingAnnotation?) = (nil, nil, nil)
     fileprivate let mapView = MAMapView(frame: R.Rect.default).then {
@@ -33,6 +50,7 @@ class MapRiderViewController: UIViewController {
         $0.showsScale = false
         $0.showsUserLocation = true
         $0.userTrackingMode = .follow
+        $0.isRotateCameraEnabled = false
         $0.customizeUserLocationAccuracyCircleRepresentation = true
         let r = MAUserLocationRepresentation()
         r.image = R.image.map_mine_location()
@@ -62,6 +80,7 @@ class MapRiderViewController: UIViewController {
         super.viewDidLoad()
         layoutViewController()
         configureObservable()
+    
         
     }
     
@@ -168,25 +187,25 @@ class MapRiderViewController: UIViewController {
             })
             .addDisposableTo(disposeQueue, key: "msgItem")
         
-        // 取消目的地
+        // 取消目的地按钮
         backItem.rx.tap
             .subscribe(onNext: {[weak self] _ in
                 guard let `self` = self else { return }
-                self.viewModel.orderLocation.value.to = nil
+                self.viewModel.setDestinationPosition(coordinate: nil)
                 self.navigationItem.leftBarButtonItem = self.userItem
                 self.locationSelectView.buttons.destination.title = "选择目的地"
             })
             .addDisposableTo(disposeQueue, key: "backItem")
     
-        // 订单预览
-        viewModel.orderPreview.asObservable()
-            .subscribe(onNext: {[weak self] (req: HTReuqestOrder?, res: HTOrderPreview?) in
-                self?.changeDisplayPath(travelRequest: req, travelRespone: res)
+        //  UI Update : 订单预览
+        viewModel.orderRespone.asObservable()
+            .subscribe(onNext: {[weak self] (req: HTReuqestOrder?, res: HTOrderProtocol?) in
+                self?.changeTravelRespone(travelRequest: req, travelRespone: res)
             })
-            .addDisposableTo(disposeQueue, key: "TravelPathChange")
+            .addDisposableTo(disposeQueue, key: "travelPreview")
         
         
-        // 起始点目的地选择状态
+        //  UI Update : 起始点目的地选择状态
         viewModel.orderLocation.asObservable()
             .observeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: {[weak self] (loc: OrderSelectLocation) in
@@ -196,17 +215,60 @@ class MapRiderViewController: UIViewController {
             .addDisposableTo(disposeQueue, key: "orderLocation")
         
         
-        // 附近司机位置
+        // UI Update : 附近司机位置
         viewModel.drivers.asObservable()
             .observeOn(MainScheduler.asyncInstance)
             .subscribe(onNext: {[weak self] (drivers: [DriverLocation]) in
                 self?.updateDriverAnnotation(drivers: drivers)
             })
             .addDisposableTo(disposeQueue, key: "driverLocation")
+        
+        // 确认接单
+        pricePopupCard.commit.rx.tap.asObservable()
+            .flatMap {[weak self] _ -> Observable<HTResult<HTOrder>> in
+                guard let `self` = self else {
+                    return Observable.never()
+                }
+                SVProgressHUD.show(withStatus: "等待接单")
+                return self.viewModel.commitOrder().mapToResult(error: "error")
+                    .do(onNext: { (res: HTResult<HTOrder>) in
+                        switch res {
+                        case .error(let error):
+                            SVProgressHUD.showError(withStatus: error.localizedDescription ?? "error")
+                        case .success(_):
+                            SVProgressHUD.showSuccess(withStatus: "已有司机接单")
+                        }
+                    })
+            }
+            .withLatestFrom(viewModel.orderRespone.asObservable())
+            .subscribe(onNext: {[weak self] (req: HTReuqestOrder?, res: HTOrderProtocol?) in
+                self?.changeTravelRespone(travelRequest: req, travelRespone: res)
+            })
+            .addDisposableTo(disposeQueue, key: "commitTravel")
+    
+        
+        viewModel.orderStatus.subscribe(onNext: { (status: HTOrderStatus) in
+                print(status)
+            })
+            .addDisposableTo(disposeQueue, key: "OrderStatus")
+        
+    
+    
     }
     
-    // 更新 UI操作
-    private func changeCenterDisplayStatus(isShow: Bool) {
+    
+  
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+}
+
+
+
+extension MapRiderViewController {
+
+    // 显示/隐藏 中心点标记
+    fileprivate func changeCenterDisplayStatus(isShow: Bool) {
         if !isShow {
             centerBubbleView.isHidden = true
             centerSelectPoint.isHidden = true
@@ -223,7 +285,8 @@ class MapRiderViewController: UIViewController {
         }
     }
     
-    private func changeDisplayPath(travelRequest: HTReuqestOrder?, travelRespone: HTOrderProtocol?){
+    // 显示请求结果
+    fileprivate func changeTravelRespone(travelRequest: HTReuqestOrder?, travelRespone: HTOrderProtocol?){
         func removeOldAnnotation() {
             if let start = annotation.start  {
                 mapView.removeAnnotation(start)
@@ -234,16 +297,12 @@ class MapRiderViewController: UIViewController {
                 annotation.end = nil
             }
         }
-        if let line = pathPolyline {
-            pathPolyline = nil
-            mapView.remove(line)
-        }
-        if let path = travelRequest, let res = travelRespone {
+        if let path = travelRequest, let res = travelRespone as? HTOrderPreview {
             // 显示价格框
             do {
                 UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
                     self.pricePopupCard.frame.origin.y = PricePopupCard.Layout.showY
-                    self.locationSelectView.frame.origin.y = -200
+//                    self.locationSelectView.frame.origin.y = -200
                 }, completion: nil)
                 let dis = String(format: "%.1f", Double(res.distance ?? 0)/1000.0)
                 let price = String(format: "%.2f", res.estimatePrice ?? 0)
@@ -265,21 +324,25 @@ class MapRiderViewController: UIViewController {
                 mapView.showAnnotations([startPoint, endPoint], edgePadding: UIEdgeInsets(top: 500, left: 100, bottom: 500, right: 100), animated: true)
                 annotation = (startPoint, endPoint, nil)
             }
-            
+            mapMode = .selected
+        } else if let path = travelRequest, let res = travelRespone as? HTOrder {
+            mapMode = .waiting
         } else {
+            mapMode = .selecting
             if pricePopupCard.frame.origin.y.isEqual(to: PricePopupCard.Layout.showY) {
                 UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
                     self.pricePopupCard.frame.origin.y = PricePopupCard.Layout.hideY
-                    self.locationSelectView.frame.origin.y = R.Margin.large                   
+                    self.locationSelectView.frame.origin.y = R.Margin.large
                 }, completion: nil)
             }
-            viewModel.currentPosition.value = mapView.centerCoordinate
+            viewModel.setCurrentPosition(coordinate: mapView.centerCoordinate)
             removeOldAnnotation()
         }
+        
     }
     
-    
-    private func updateDriverAnnotation(drivers: [DriverLocation]) {
+    // 更新司机位置
+    fileprivate func updateDriverAnnotation(drivers: [DriverLocation]) {
         let current = drivers.flatMap({ $0.data.id })
         var currentAnnotations = carAnnotation
         var removeAnnotations = [MovingAnnotation]()
@@ -307,50 +370,47 @@ class MapRiderViewController: UIViewController {
             }
         }
         carAnnotation = currentAnnotations
-
     }
     
-    private func showSearchViewController() {
+    // 显示搜索
+    fileprivate func showSearchViewController() {
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
             self.locationSelectView.frame.origin.y = -200
         }, completion: nil)
         let vc = MapSearchViewController(canShowHeader: true)
         vc.delegate = self
         self.present(vc, animated: true, completion: nil)
-
+        
     }
     
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
+
 }
 
-
-extension MapRiderViewController: MapSearchViewControllerDelegate {
+extension MapRiderViewController: MAMapViewDelegate, MapSearchViewControllerDelegate {
+    
+    
     func mapSearchViewController(didDismiss vc: MapSearchViewController) {
         self.locationSelectView.frame.origin.y = R.Margin.large
     }
     
     func mapSearchViewController(didSelect vc: MapSearchViewController, data: HTLocation) {
         locationSelectView.buttons.destination.title = data.name
-        viewModel.orderLocation.value.to = data
+        viewModel.setDestinationPosition(coordinate: data)
     }
-}
 
-
-extension MapRiderViewController: MAMapViewDelegate {
     
     func mapView(_ mapView: MAMapView!, mapDidMoveByUser wasUserAction: Bool) {
-        if viewModel.didSelectStartAndEndLocation { return }
-        viewModel.currentPosition.value = mapView.centerCoordinate
+        if mapMode == .selecting {
+            viewModel.setCurrentPosition(coordinate: mapView.centerCoordinate)
+        }
     }
     
     func mapView(_ mapView: MAMapView!, didUpdate userLocation: MAUserLocation!, updatingLocation: Bool) {
-        if isInitial, let loc = userLocation?.coordinate {
+        if mapMode == .initial, let loc = userLocation?.coordinate {
             mapView.setZoomLevel(17, animated: true)
             mapView.setCenter(loc, animated: true)
-            isInitial = false
+            mapMode = .selecting
         }
     }
     

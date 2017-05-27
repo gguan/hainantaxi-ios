@@ -27,18 +27,22 @@ extension HTReuqestOrder {
 
 class MapRiderViewModel {
     
-    
     private let orderService = OrderRiderService()
     
     // 订单预览变化
-    let orderPreview    = Variable<(req: HTReuqestOrder?, res: HTOrderPreview?)>.init((req: nil, res: nil))
+    let orderRespone    = Variable<(req: HTReuqestOrder?, res: HTOrderProtocol?)>.init((req: nil, res: nil))
     // 当前位置变化
     let currentPosition = Variable<Coordinate2D?>(nil)
     // 路径会话变化
     let orderLocation   = Variable<OrderSelectLocation>(OrderSelectLocation())
     // 附近司机
     let drivers         = Variable<[DriverLocation]>([])
-
+    
+    var orderStatus: Observable<HTOrderStatus> {
+        return orderService.orderStatus.asObservable()
+    }
+    
+    // 当前所在区域
     private var region: HTRegion? {
         didSet {
             let oldId = Set(oldValue?.subRegions ?? [String]())
@@ -77,6 +81,25 @@ class MapRiderViewModel {
             })
             .addDisposableTo(disposeQueue, key: "CurrentPosition")
         
+        // 位置变化进行反编码
+        currentPosition.asObservable()
+            .flatMap { (coor: Coordinate2D?) -> Observable<HTResult<HTLocation>> in
+                guard let p = coor else {
+                    return Observable.just(HTResult<HTLocation>.error(error: NSError.build(desc: "Latlng not found")))
+                }
+                return MapSearchManager.searchReGeocode(coordinate: p)
+                    .mapToResult(error: "ReGeocode error")
+            }
+            .subscribe(onNext: {[weak self] (loc: HTResult<HTLocation>) in
+                switch loc {
+                case .success(let value):
+                    self?.orderLocation.value.from = value
+                case .error(let error):
+                    print(error)
+                }
+            })
+            .addDisposableTo(disposeQueue, key: "ReGeocode")
+
         
         // 订单位置发生变化
         orderLocation.asObservable()
@@ -111,45 +134,56 @@ class MapRiderViewModel {
                 let key = "OrderPreview"
                 guard let req = request else {
                     self.disposeQueue.dispose(key)
-                    self.orderPreview.value = (nil, nil)
+                    self.orderRespone.value = (nil, nil)
                     return
                 }
                 HUG.showHUD()
                 self.orderService.preorder(request: req)
                     .subscribe(onNext: {[weak self] (pre: HTOrderPreview) in
-                        self?.orderPreview.value = (request, pre)
+                        self?.orderRespone.value = (request, pre)
                         HUG.hideHUD()
                     }, onError: {[weak self] error in
                         HUG.showError(error)
-                        self?.orderPreview.value = (request, nil)
+                        self?.orderRespone.value = (request, nil)
                     })
                     .addDisposableTo(self.disposeQueue, key: key)
             })
             .addDisposableTo(disposeQueue, key: "OrderLocationChange")
         
         
-        // 位置变化进行反编码
-        currentPosition.asObservable()
-            .flatMap { (coor: Coordinate2D?) -> Observable<HTResult<HTLocation>> in
-                guard let p = coor else {
-                    return Observable.just(HTResult<HTLocation>.error(error: NSError.build(desc: "Latlng not found")))
-                }
-                return MapSearchManager.searchReGeocode(coordinate: p)
-                    .mapToResult(error: "ReGeocode error")
-            }
-            .subscribe(onNext: {[weak self] (loc: HTResult<HTLocation>) in
-                switch loc {
-                case .success(let value):
-                    self?.orderLocation.value.from = value
-                case .error(let error):
-                    print(error)
-                }
-            })
-            .addDisposableTo(disposeQueue, key: "ReGeocode")
-
     }
     
-    func subscribe(region: [String]) {
+
+    func setCurrentPosition(coordinate: Coordinate2D?) {
+        currentPosition.value = coordinate
+    }
+    
+    func setDestinationPosition(coordinate: HTLocation?) {
+        orderLocation.value.to = coordinate
+    }
+    
+    
+    func unsubscribeAllRegion() {
+        drivers.value = []
+        region = nil
+    }
+    
+    
+    func commitOrder() -> Observable<HTOrder> {
+        guard let req = orderRespone.value.req else {
+            return Observable<HTOrder>.error(NSError.build(desc: "Request not found"))
+        }
+        return orderService.commitOrder(request: req)
+            .do(onNext: {[weak self] (order: HTOrder) in
+                self?.orderRespone.value.res = order
+            })
+    }
+    
+    
+    
+    
+    private func subscribe(region: [String]) {
+        if region.isEmpty && drivers.value.isEmpty { return }
         var observers = [Observable<MQTTMessage>]()
         for i in region {
             let sig = MQTTService.subscriptTopic(name: MQTTRiderTopic.regionDrivers(regionId: i))
@@ -175,12 +209,14 @@ class MapRiderViewModel {
                     newDriver[id] = dl
                 }
                 let keys = newDriver.keys
-                for xy in location {
-                    guard let id = xy.id else { continue }
+                for latlng in location {
+                    guard let id = latlng.id else { continue }
+//                    var tmp = latlng
+//                    tmp.locations =  latlng.locations?.convertTo(from: CoordinateType.GPS)
                     if keys.contains(id) {
-                        newDriver[id]?.update(location: xy)
+                        newDriver[id]?.update(location: latlng)
                     } else {
-                        newDriver[id] = DriverLocation(xy)
+                        newDriver[id] = DriverLocation(latlng)
                     }
                 }
                 self.drivers.value = Array<DriverLocation>(newDriver.values)
@@ -188,7 +224,7 @@ class MapRiderViewModel {
             .addDisposableTo(disposeQueue, key: "DriverChange")
     }
     
-    func unsubscribe(region: [String]) {
+    private func unsubscribe(region: [String]) {
         region.forEach { (id: String) in
             _ = MQTTService.unsubscriptTopic(name: MQTTRiderTopic.regionDrivers(regionId: id))
         }
